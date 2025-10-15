@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Logowanie - eCVjob.pl</title>
     
     <!-- OPTYMALIZACJE SEO I WYDAJNOŚĆ -->
@@ -21,55 +21,25 @@
             display: flex;
             flex-direction: column;
         }
+        /* Fixed, fitted background on small screens */
+        @media (max-width: 768px) {
+            body { background: transparent !important; }
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: url('images/tlo.jpg') no-repeat center center;
+                background-size: cover;
+                z-index: -1;
+                pointer-events: none;
+                transform: translateZ(0);
+            }
+        }
 
-        /* MENU Z INDEX.HTML */
-        .main-nav {
-            width: 100vw;
-            background: rgba(0,0,0,0.85);
-            box-shadow: 0 2px 18px #00ff0033;
-            position: relative;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            margin-bottom: 0;
-        }
-        .nav-logo {
-            color: #00ff00;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-right: 18px;
-            letter-spacing: 1px;
-            text-shadow: 0 0 8px #00ff00;
-        }
-        .nav-list {
-            list-style: none;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: 0;
-            margin: 0;
-            padding: 0;
-            background: none;
-        }
-        .nav-list li a {
-            color: #00ff00;
-            font-weight: bold;
-            text-decoration: none;
-            padding: 15px 20px;
-            display: block;
-            border-radius: 5px;
-            transition: background 0.3s, color 0.3s;
-        }
-        .nav-list li a:hover {
-            background: #00ff00;
-            color: #222;
-        }
-        .nav-list li a.active {
-            background: #00ff00;
-            color: #222;
-        }
+        /* Global back button */
+        .back-btn { position: fixed; top: calc(14px + env(safe-area-inset-top)); left: 14px; z-index: 9999; background: rgba(0,0,0,0.8); color:#00ff00; border:2px solid #00ff00; border-radius: 12px; padding: 10px 14px; font-weight: 800; letter-spacing: .5px; box-shadow: 0 6px 24px rgba(0,255,0,.25); cursor: pointer; }
+        .back-btn:active { transform: scale(.98) }
+        @media (max-width: 768px) { .back-btn { font-size: 14px } }
 
         /* CONTAINER LOGOWANIA */
         .login-container {
@@ -264,26 +234,11 @@
     </style>
 </head>
 <body>
-    <!-- MENU -->
-    <nav class="main-nav">
-        <div class="nav-logo">eCVjob.pl</div>
-        <ul class="nav-list">
-            <li><a href="index.html">Strona główna</a></li>
-            <li><a href="index.html#o-nas">O nas</a></li>
-            <li><a href="baza_cv.html">Baza CV</a></li>
-            <li><a href="index.html#oferty-pracy">Oferty pracy</a></li>
-            <li><a href="index.html#uslugi">Usługi</a></li>
-            <li><a href="index.html#kreator-cv">Kreator CV</a></li>
-            <li><a href="index.html#cv-tips">CV Tips</a></li>
-            <li><a href="index.html#webresume">WebResume</a></li>
-            <li><a href="index.html#blog">Blog</a></li>
-            <li><a href="index.html#europass">Europass</a></li>
-            <li><a href="index.html#faq">FAQ</a></li>
-            <li><a href="rejestracja_new.html">📞 Kontakt</a></li>
-            <li><a href="logowanie.html" class="active">Logowanie</a></li>
-            <li><a href="rejestracja_new.html">Rejestracja</a></li>
-        </ul>
-    </nav>
+    <!-- Dekoracyjne logo po prawej stronie, pod wszystkimi sekcjami -->
+    <img src="images/logo.png" alt="Logo" aria-hidden="true"
+         style="position:fixed; top:80px; right:0; width:180px; opacity:0.13; z-index:0; pointer-events:none; user-select:none;" />
+    <!-- Przycisk Wstecz (zawsze widoczny) -->
+    <button id="backBtn" class="back-btn" type="button">← Wstecz</button>
 
     <div class="login-container">
         <div class="login-box">
@@ -323,6 +278,16 @@
     </div>
 
     <script>
+        // Back button handler with fallback to index
+        document.addEventListener('DOMContentLoaded', function(){
+            var btn = document.getElementById('backBtn');
+            if (btn) {
+                btn.addEventListener('click', function(){
+                    if (history.length > 1) { history.back(); }
+                    else { location.href = 'index.html'; }
+                });
+            }
+        });
         // Po odświeżeniu strony przewiń na samą górę
         window.addEventListener('beforeunload', function() {
             window.scrollTo(0, 0);
@@ -345,13 +310,17 @@
                 // Sprawdzanie danych (w rzeczywistości to byłoby połączenie z serwerem)
                 if (email && password.length >= 6) {
                     button.textContent = '✅ Zalogowano!';
-                    
+                    // Zapisz dane użytkownika do sessionStorage i localStorage
+                    const userData = {
+                        name: email.split('@')[0],
+                        email: email,
+                        plan: 'Bezpłatny'
+                    };
+                    sessionStorage.setItem('currentUser', JSON.stringify(userData));
+                    localStorage.setItem('isLoggedIn', 'true');
                     setTimeout(() => {
                         alert('Witamy z powrotem! Przekierowujemy do panelu użytkownika...');
-                        // window.location.href = 'panel.html';
-                        
-                        // Na razie przekierowanie do strony głównej
-                        window.location.href = 'index.html';
+                        window.location.href = 'moj-profil.html';
                     }, 1500);
                 } else {
                     button.textContent = '❌ Błąd logowania';
@@ -390,6 +359,29 @@
                 this.parentElement.style.transform = 'scale(1)';
             });
         });
-    </script>
+        </script>
+        <!-- iOS standalone back button -->
+        <style>
+            .pwa-back-btn { position: fixed; top: 14px; left: 14px; z-index: 9999; background: rgba(0,0,0,0.8); color:#00ff00; border:2px solid #00ff00; border-radius: 12px; padding: 10px 14px; font-weight: 800; letter-spacing: .5px; box-shadow: 0 6px 24px rgba(0,255,0,.25); display:none }
+            .pwa-back-btn:active { transform: scale(.98) }
+            @media (max-width: 768px) { .pwa-back-btn { font-size: 14px } }
+        </style>
+        <script>
+            (function(){
+                var isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone;
+                if (!isStandalone) return;
+                var path = (location.pathname||'').toLowerCase();
+                if (path.endsWith('/index.html') || path === '/' || path === '') return;
+                var btn = document.createElement('button');
+                btn.className = 'pwa-back-btn';
+                btn.textContent = '← Wstecz';
+                btn.addEventListener('click', function(){
+                    if (history.length > 1) { history.back(); }
+                    else { location.href = 'index.html'; }
+                });
+                document.body.appendChild(btn);
+                btn.style.display = 'inline-block';
+            })();
+        </script>
 </body>
 </html>

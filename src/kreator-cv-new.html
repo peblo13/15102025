@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Kreator CV | eCVjob.pl</title>
     <meta name="description" content="Stwórz profesjonalne CV online w kilka minut. Wybierz szablon, wypełnij dane i pobierz gotowe CV.">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
+        /* Global back button and hide any legacy menus */
+        .back-btn { position: fixed; top: calc(14px + env(safe-area-inset-top)); left: 14px; z-index: 9999; background: rgba(0,0,0,0.85); color:#00ff00; border:2px solid #00ff00; border-radius: 12px; padding: 10px 14px; font-weight: 800; letter-spacing: .5px; box-shadow: 0 6px 24px rgba(0,255,0,.25); cursor: pointer; }
+        .back-btn:active { transform: scale(.98) }
+        @media (max-width: 768px) { .back-btn { font-size: 14px } }
+        #menu, nav, .navbar, .navbar-main, .navbar-extra { display: none !important; }
         body {
             background: url('images/tlo.jpg') no-repeat center center fixed;
             background-size: cover;
@@ -109,39 +114,10 @@
     </style>
 </head>
 <body>
-    <div class="cv-container">
-        <h1>Kreator CV</h1>
-        <form class="cv-form" id="cvForm">
-            <div class="form-row">
-                <div>
-                    <label for="name">Imię i nazwisko</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div>
-                    <label for="email">E-mail</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-            </div>
-            <div class="form-row">
-                <div>
-                    <label for="phone">Telefon</label>
-                    <input type="text" id="phone" name="phone">
-                </div>
-                <div>
-                    <label for="position">Stanowisko</label>
-                    <input type="text" id="position" name="position" placeholder="np. Programista, Grafik">
-                </div>
-            </div>
-            <label for="summary">Podsumowanie zawodowe</label>
-            <textarea id="summary" name="summary" placeholder="Krótko opisz siebie i swoje doświadczenie"></textarea>
-            <label for="experience">Doświadczenie zawodowe</label>
-            <textarea id="experience" name="experience" placeholder="Wypisz swoje doświadczenie, stanowiska, firmy, lata pracy"></textarea>
-            <label for="education">Wykształcenie</label>
-            <textarea id="education" name="education" placeholder="Szkoły, uczelnie, kursy"></textarea>
-            <label for="skills">Umiejętności</label>
-            <input type="text" id="skills" name="skills" placeholder="np. JavaScript, Photoshop, Excel">
-            <button type="button" onclick="generateCV()">Podgląd CV</button>
-        </form>
+    <!-- Dekoracyjne logo po prawej stronie, pod wszystkimi sekcjami -->
+    <img src="images/logo.png" alt="Logo" aria-hidden="true"
+         style="position:fixed; top:80px; right:0; width:180px; opacity:0.13; z-index:0; pointer-events:none; user-select:none;" />
+    <!-- cv-container removed as per user request -->
         <div class="cv-preview" id="cvPreview" style="display:none;"></div>
     </div>
     <script>
@@ -207,18 +183,13 @@
             opacity: 1;
             pointer-events: none;
         }
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
             body::before {
                 background-attachment: scroll !important;
                 background-position: center top !important;
             }
         }
-        @media (max-width: 600px) {
-            body::before {
-                background-attachment: scroll !important;
-                background-position: center top !important;
-            }
-        }
+        
 
         /* --- 4-COLUMN RESPONSIVE MENU --- */
         nav {
@@ -1553,29 +1524,13 @@
     </style>
 </head>
 <body>
-    <!-- Menu ładowane dynamicznie przez JS -->
-    <div id="menu"></div>
+    <!-- Dekoracyjne logo po prawej stronie, pod wszystkimi sekcjami -->
+    <img src="images/logo.png" alt="Logo" aria-hidden="true"
+         style="position:fixed; top:80px; right:0; width:180px; opacity:0.13; z-index:0; pointer-events:none; user-select:none;" />
+    <button id="global-back-btn" class="back-btn" type="button">← Wstecz</button>
     
     <!-- User Profile Section -->
-    <div id="userProfile" style="
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        background: rgba(0, 0, 0, 0.9);
-        color: #00ff00;
-        padding: 8px 15px;
-        border-radius: 25px;
-        font-size: 0.9rem;
-        font-weight: bold;
-        z-index: 1000;
-        border: 2px solid #00ff00;
-        box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-        display: none;
-    ">
-        <span id="userWelcome">Witaj, Użytkowniku!</span>
-        <br>
-        <span id="userPlan">💎 PREMIUM</span>
-    </div>
+    <!-- userProfile container removed as per user request -->
 
     <!-- Main content -->
     <main class="container">
@@ -1643,6 +1598,8 @@
                           </span>
                           <span class="feature-label">AI Chat</span>
                         </li>
+                                                <li class="ai-feature">🤖 Inteligentna wyszukiwarka ofert pracy — spersonalizowana pod Twoje CV</li>
+                                                <li class="ai-feature">🎯 Sugerowane oferty dopasowane do Twojego profilu</li>
                     </ul>
                     <div class="plan-winner">Wygrywa dzięki AI!</div>
                 </div>
@@ -1656,27 +1613,29 @@
                     max-width: 950px;
                 }
                 .plan-card {
-                    background: rgba(0,0,0,0.85);
+                    background: rgba(0,0,0,0.9);
                     border: 2px solid #00ff00;
                     border-radius: 18px;
-                    box-shadow: 0 0 18px #00ff0044;
+                    box-shadow: 0 0 22px #00ff0044;
                     padding: 2.2rem 1.2rem 1.5rem 1.2rem;
                     text-align: center;
                     position: relative;
                     min-width: 0;
+                    color: #fff;
                 }
                 .plan-card.premium {
                     border: 3px solid #ffd700;
-                    box-shadow: 0 0 32px #ffd70099;
+                    box-shadow: 0 0 36px #ffd700aa;
                     z-index: 2;
                 }
                 .plan-card.most-popular {
-                    background: linear-gradient(135deg, rgba(255,215,0,0.12) 0%, rgba(0,0,0,0.85) 100%);
+                    /* Utrzymujemy ciemne tło dla wysokiego kontrastu, delikatny złoty akcent */
+                    background: linear-gradient(135deg, rgba(255,215,0,0.06) 0%, rgba(0,0,0,0.92) 40%, rgba(0,0,0,0.92) 100%);
                 }
                 .plan-badge {
                     font-weight: bold;
                     font-size: 1.1rem;
-                    color: #fff;
+                    color: #111;
                     background: #00ff00;
                     border-radius: 12px;
                     padding: 6px 18px;
@@ -1686,12 +1645,12 @@
                 }
                 .plan-card.premium .plan-badge {
                     background: linear-gradient(45deg, #ffd700, #ffed4e);
-                    color: #222;
+                    color: #111;
                     box-shadow: 0 2px 12px #ffd70055;
                 }
                 .most-popular-badge {
                     background: #ffd700;
-                    color: #222;
+                    color: #111;
                     border-radius: 8px;
                     padding: 2px 10px;
                     font-size: 0.85em;
@@ -1701,14 +1660,20 @@
                     animation: badgePulse 1.5s infinite alternate;
                 }
                 .plan-price {
-                    font-size: 2.1rem;
-                    color: #00ff00;
+                    font-size: 2.2rem;
+                    color: #00ff66;
                     font-weight: bold;
                     margin-bottom: 1.2rem;
+                    text-shadow: 0 0 10px rgba(0,255,0,0.35);
                 }
                 .plan-card.premium .plan-price {
-                    color: #ffd700;
-                    text-shadow: 0 0 8px #ffd70099;
+                    color: #fff;
+                    text-shadow: 0 0 10px rgba(255,215,0,0.7);
+                    display: inline-block;
+                    padding: 6px 12px;
+                    border-radius: 10px;
+                    border: 1px solid rgba(255,215,0,0.6);
+                    background: rgba(0,0,0,0.55);
                 }
                 .plan-features {
                     list-style: none;
@@ -1722,15 +1687,17 @@
                     display: flex;
                     align-items: center;
                     gap: 0.6em;
+                    color: #eeeeee;
                 }
                 .feature-cross {
-                    color: #ff0033;
+                    color: #ff3355;
                     font-size: 1.2em;
                     font-weight: bold;
                 }
                 .ai-feature {
                     font-weight: bold;
-                    color: #9966ff;
+                    color: #bfa3ff;
+                    text-shadow: 0 0 8px rgba(153,102,255,0.4);
                 }
                 .chat-icon-minimal {
                     display: inline-block;
@@ -1743,6 +1710,31 @@
                     width: 1.7em;
                     height: 1.7em;
                 }
+                .plan-winner {
+                    color: #ffd700;
+                    font-weight: 800;
+                    font-size: 1.05rem;
+                    display: inline-block;
+                    padding: 8px 14px;
+                    border-radius: 999px;
+                    border: 2px solid #ffd700;
+                    background: rgba(0,0,0,0.75);
+                    margin: 1.1rem auto 0 auto;
+                    text-align: center;
+                    animation: winnerBadge 1.5s infinite alternate;
+                }
+                .plan-loser {
+                    color: #ffffff;
+                    font-weight: 800;
+                    font-size: 1.05rem;
+                    display: inline-block;
+                    padding: 8px 14px;
+                    border-radius: 999px;
+                    border: 2px solid #ff0033;
+                    background: rgba(255,0,51,0.25);
+                    margin: 1.1rem auto 0 auto;
+                    text-align: center;
+                }
                 @media (max-width: 900px) {
                     .plans-comparison-grid {
                         grid-template-columns: 1fr;
@@ -1752,36 +1744,23 @@
                         width: 1.3em;
                         height: 1.3em;
                     }
+                    .plan-winner, .plan-loser { margin-left: auto; margin-right: auto; }
                 }
                 @media (max-width: 600px) {
-                    .plan-card {
-                        padding: 1.2rem 0.5rem 1rem 0.5rem;
-                    }
-                    .plan-price {
-                        font-size: 1.3rem;
-                    }
+                    .plan-card { padding: 1.1rem 0.7rem 0.9rem 0.7rem; }
+                    .plan-price { font-size: 1.35rem; }
                     .chat-icon-minimal svg {
                         width: 1em;
                         height: 1em;
                     }
-                }
-                .plan-winner {
-                    color: #ffd700;
-                    font-weight: bold;
-                    margin-top: 1.1rem;
-                    font-size: 1.1rem;
-                    animation: winnerBadge 1.5s infinite alternate;
-                }
-                .plan-loser {
-                    color: #ff0033;
-                    font-weight: bold;
-                    margin-top: 1.1rem;
-                    font-size: 1.1rem;
+                    .plan-winner, .plan-loser { margin-left: auto; margin-right: auto; }
                 }
             </style>
         </section>
 
         <!-- FREE PLAN EARNING OPPORTUNITIES - Highlighted Section -->
+
+    <!-- Podgląd eCVjob.pl Professional section removed as per user request -->
         <section style="
             background: linear-gradient(45deg, rgba(0, 255, 0, 0.15) 0%, rgba(255, 215, 0, 0.1) 50%, rgba(0, 255, 0, 0.15) 100%);
             border: 3px solid #00ff00;
@@ -1789,41 +1768,32 @@
             padding: 40px;
             margin: 30px 0;
             box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            animation: freeEarningGlow 3s ease-in-out infinite alternate;
         ">
             <div style="
-                position: absolute;
-                top: -10px;
-                right: -10px;
-                background: linear-gradient(45deg, #00ff00, #ffd700);
-                color: #000;
-                padding: 8px 20px;
-                border-radius: 25px;
-                font-weight: bold;
-                font-size: 0.9rem;
-                box-shadow: 0 4px 15px rgba(0, 255, 0, 0.5);
-                z-index: 10;
-                animation: badgePulse 2s ease-in-out infinite;
-            ">
-                💰 PLAN DARMOWY
-            </div>
+                display: inline-block;
+                background: rgba(0,255,0,0.15);
+                border: 1px solid #00ff00;
+                color: #00ff00;
+                border-radius: 999px;
+                padding: 6px 12px;
+                font-weight: 700;
+                margin: 0 auto 10px;
+                text-align: center;
+                display: block;
+                width: fit-content;
+            ">💰 PLAN DARMOWY</div>
             
             <h2 style="
                 text-align: center;
-                font-size: 2.8rem;
+                font-size: 2.2rem;
                 color: #00ff00;
-                margin-bottom: 1rem;
                 font-weight: bold;
-                text-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
-            ">
-                🆓 ZARABIAJ BEZ PŁACENIA!
-            </h2>
+                margin: 0.3rem 0 1rem 0;
+            ">Zarabiaj na swoich szablonach CV – bez Premium</h2>
             
             <p style="
                 text-align: center;
-                font-size: 1.4rem;
+                font-size: 1.1rem;
                 color: #ffffff;
                 margin-bottom: 2rem;
                 font-weight: 500;
@@ -1952,257 +1922,7 @@
             </div>
         </section>
 
-        <!-- FREE vs PREMIUM COMPARISON - Proving Free is Better -->
-        <section style="
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(20, 20, 20, 0.95) 100%);
-            border:  3px solid #ffd700;
-            border-radius: 25px;
-            padding: 50px;
-            margin: 40px 0;
-            box-shadow: 0  20px 50px rgba(255, 215, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        ">
-            <div style="
-                position: absolute;
-                top: -10px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: linear-gradient(45deg, #ff0000, #ffd700);
-                color: #000;
-                padding: 12px 30px;
-                border-radius: 25px;
-                font-weight: bold;
-                font-size: 1rem;
-                box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
-                z-index: 10;
-            ">
-                🔥 SZOKUJĄCE PORÓWNANIE! 🔥
-            </div>
-            
-            <h2 style="
-                text-align: center;
-                font-size: 3.5rem;
-                color: #ffd700;
-                margin: 2rem 0 3rem 0;
-                font-weight: bold;
-                text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-            ">
-                FREE vs PREMIUM: KTO WYGRYWA?
-            </h2>
-            
-            <div style="
-                display: grid;
-                grid-template-columns: 1fr auto 1fr;
-                gap: 3rem;
-                align-items: start;
-            ">
-                <!-- FREE PLAN (przegrany) -->
-                <div style="
-                    background: linear-gradient(135deg, rgba(0, 255, 0, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%);
-                    border: 3px solid #00ff00;
-                    border-radius: 20px;
-                    padding: 3rem;
-                    text-align: center;
-                    position: relative;
-                    opacity: 0.7;
-                ">
-                    <div style="
-                        position: absolute;
-                        top: -15px;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        background: #666;
-                        color: #fff;
-                        padding: 8px 20px;
-                        border-radius: 20px;
-                        font-weight: bold;
-                        font-size: 0.9rem;
-                    ">
-                        💸 PRZEGRANY 💸
-                    </div>
-                    <h3 style="
-                        font-size: 2.5rem;
-                        color: #00ff00;
-                        margin-bottom: 2rem;
-                        font-weight: bold;
-                    ">
-                        🆓 PLAN FREE
-                    </h3>
-                    <div style="margin-bottom: 2rem;">
-                        <div style="
-                            font-size: 3rem;
-                            color: #ffd700;
-                            font-weight: bold;
-                            margin-bottom: 0.5rem;
-                        ">
-                            0 ZŁ/MIESIĘCZNIE
-                        </div>
-                        <div style="color: #00ff00; font-size: 1.2rem; font-weight: bold;">
-                            KOSZT MIESIĘCZNY
-                        </div>
-                    </div>
-                    <div style="text-align: left; color: #fff; font-size: 1.1rem; line-height: 2;">
-                        <div style="margin-bottom: 1rem;">
-                            <span style="color: #00ff00; font-size: 1.5rem;">✅</span>
-                            <strong style="color: #ffd700;">70% prowizji</strong> z każdej sprzedaży
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <span style="color: #00ff00; font-size: 1.5rem;">✅</span>
-                            <strong style="color: #ffd700;">Nieograniczona</strong> liczba szablonów
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <span style="color: #00ff00; font-size: 1.5rem;">✅</span>
-                            <strong style="color: #ffd700;">Pełne narzędzia</strong> kreatora
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <span style="color: #00ff00; font-size: 1.5rem;">✅</span>
-                            <strong style="color: #ffd700;">Wypłaty</strong> co tydzień
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <span style="color: #00ff00; font-size: 1.5rem;">✅</span>
-                            <strong style="color: #ffd700;">Support 24/7</strong>
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <span style="color: #ff6666; font-size: 1.5rem;">❌</span>
-                            <strong style="color: #ff6666;">Brak AI czatu!</strong>
-                        </div>
-                    </div>
-                </div>
-                <!-- VS SEPARATOR -->
-                <div style="
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 4rem;
-                    color: #ffd700;
-                    font-weight: bold;
-                    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-                    animation: vsAnimation 2s ease-in-out infinite;
-                ">
-                    VS
-                </div>
-                <!-- PREMIUM PLAN (zwycięzca) -->
-                <div style="
-                    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%);
-                    border: 3px solid #ffd700;
-                    border-radius: 20px;
-                    padding: 3rem;
-                    text-align: center;
-                    position: relative;
-                    animation: winnerGlow 2s ease-in-out infinite alternate;
-                ">
-                    <div style="
-                        position: absolute;
-                        top: -15px;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        background: linear-gradient(45deg, #ffd700, #00ff00);
-                        color: #000;
-                        padding: 8px 20px;
-                        border-radius: 20px;
-                        font-weight: bold;
-                        font-size: 0.9rem;
-                        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.6);
-                        animation: winnerBadge 1s ease-in-out infinite alternate;
-                    ">
-                        👑 ZWYCIĘZCA! 👑
-                    </div>
-                    <h3 style="
-                        font-size: 2.5rem;
-                        color: #ffd700;
-                        margin-bottom: 2rem;
-                        font-weight: bold;
-                    ">
-                        💎 PLAN PREMIUM 14,99 zł
-                    </h3>
-                    <div style="margin-bottom: 2rem;">
-                        <div style="
-                            font-size: 3rem;
-                            color: #ffd700;
-                            font-weight: bold;
-                            margin-bottom: 0.5rem;
-                        ">
-                            14,99 ZŁ/MIESIĘCZNIE
-                        </div>
-                        <div style="color: #ffd700; font-size: 1.2rem; font-weight: bold;">
-                            KOSZT MIESIĘCZNY (PROMOCJA)
-                        </div>
-                    </div>
-                    <div style="text-align: left; color: #fff; font-size: 1.1rem; line-height: 2;">
-                        <div style="margin-bottom: 1rem;">
-                            <span style="color: #ffd700; font-size: 1.5rem;">✅</span>
-                            <strong style="color: #ffd700;">70% prowizji</strong> z każdej sprzedaży
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <span style="color: #ffd700; font-size: 1.5rem;">✅</span>
-                            <strong style="color: #ffd700;">Nieograniczona</strong> liczba szablonów
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <span style="color: #ffd700; font-size: 1.5rem;">✅</span>
-                            <strong style="color: #ffd700;">Pełne narzędzia</strong> kreatora
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <span style="color: #ffd700; font-size: 1.5rem;">✅</span>
-                            <strong style="color: #ffd700;">Wypłaty</strong> co tydzień
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <span style="color: #ffd700; font-size: 1.5rem;">✅</span>
-                            <strong style="color: #ffd700;">Support 24/7</strong>
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <span style="color: #00fff7; font-size: 1.5rem;">🤖</span>
-                            <strong style="color: #00fff7;">AI czat do CV</strong> (pomoc w pisaniu CV!)
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="
-                background: rgba(0, 255, 0, 0.1);
-                border: 3px solid #00ff00;
-                border-radius: 20px;
-                padding: 3rem;
-                margin-top: 3rem;
-                text-align: center;
-            ">
-                <h3 style="
-                    font-size: 2.5rem;
-                    color: #00ff00;
-                    margin-bottom: 2rem;
-                    font-weight: bold;
-                ">
-                    🎯 WNIOSEK: PLAN FREE JEST LEPSZY!
-                </h3>
-                <p style="
-                    font-size: 1.5rem;
-                    color: #fff;
-                    line-height: 1.4;
-                    margin-bottom: 2rem;
-                ">
-                    Dlaczego płacić 99 zł miesięcznie za to samo, co dostaniesz ZA DARMO?<br>
-                    <strong style="color: #ffd700;">Plan FREE = Te same funkcje + 0 zł miesięcznie!</strong>
-                </p>
-                
-                <button onclick="startQuickCreator()" style="
-                    background: linear-gradient(45deg, #00ff00, #ffd700);
-                    color: #000;
-                    border: none;
-                    padding: 20px 40px;
-                    border-radius: 15px;
-                    font-weight: bold;
-                    font-size: 1.4rem;
-                    cursor: pointer;
-                    text-transform: uppercase;
-                    letter-spacing: 1px;
-                    box-shadow: 0 10px 30px rgba(0, 255, 0, 0.6);
-                    transition: all 0.3s ease;
-                    animation: conclusionButtonPulse 2s ease-in-out infinite;
-                " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
-                    🚀 WYBIERZ PLAN FREE I ZACZNIJ ZARABIAĆ! 🚀
-                </button>
-            </div>
-        </section>
+    <!-- Szokujące porównanie section removed as per user request -->
 
         <!-- Steps section -->
         <section class="steps-section">
@@ -2226,21 +1946,7 @@
             </div>
         </section>
 
-        <!-- Video section -->
-        <section class="video-section">
-            <h2 class="video-title">Zobacz jak tworzyć profesjonalne CV</h2>
-            <div class="video-container">
-                <iframe 
-                    width="100%" 
-                    height="400" 
-                    src="https://www.youtube.com/embed/rXacb_fejNw" 
-                    title="Jak tworzyć CV - poradnik" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </section>
+    <!-- Video section removed as per user request -->
 
         <!-- Custom Template Creator section -->
         <section class="custom-creator-section" id="custom-creator">
@@ -2274,7 +1980,7 @@
                 <div class="creator-option-card">
                     <h3>🚀 Szybki Start</h3>
                     <p>Użyj naszego wizualnego edytora typu "drag & drop" do stworzenia szablonu w kilka minut.</p>
-                    <button class="creator-button primary" onclick="startQuickCreator()">
+                    <button class="creator-button primary" onclick="window.location.href='cv-form.html'">
                         Rozpocznij szybko
                     </button>
                 </div>
@@ -2282,7 +1988,7 @@
                 <div class="creator-option-card advanced">
                     <h3>⚡ Zaawansowany</h3>
                     <p>Importuj własny kod HTML/CSS lub użyj zaawansowanego edytora z pełną kontrolą nad designem.</p>
-                    <button class="creator-button advanced" onclick="startAdvancedCreator()">
+                    <button class="creator-button advanced" onclick="window.location.href='advanced-editor.html'">
                         Tryb Pro
                     </button>
                 </div>
@@ -2290,7 +1996,7 @@
                 <div class="creator-option-card ai">
                     <h3>🤖 AI Designer</h3>
                     <p>Opisz swój pomysł, a AI stworzy szablon według Twoich wytycznych. Następnie możesz go edytować.</p>
-                    <button class="creator-button ai" onclick="startAICreator()">
+                    <button class="creator-button ai" onclick="window.location.href='ai-creator.html'">
                         Stwórz z AI
                     </button>
                 </div>
@@ -2373,13 +2079,23 @@
                 </div>
 
                 <div class="template-card premium" data-template="5">
-                    <div class="template-preview">
-                        <img src="images/szablon1.jpg" alt="Szablon CV eCVjob.pl">
+                    <div class="template-preview" style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                        <img src="images/1.png" alt="Podgląd 1 eCVjob.pl Professional" style="max-width: 320px; width: 100%; border-radius: 10px; box-shadow: 0 2px 12px #00ff0033; border: 2px solid #00ff00; background: #fff;">
+                        <img src="images/2.png" alt="Podgląd 2 eCVjob.pl Professional" style="max-width: 320px; width: 100%; border-radius: 10px; box-shadow: 0 2px 12px #00ff0033; border: 2px solid #00ff00; background: #fff;">
                     </div>
-                    <div class="template-info">
-                        <h3>eCVjob.pl Professional</h3>
+                    <div class="template-info" style="position: relative;">
+                        <h3 style="display: flex; align-items: center; gap: 0.5em;">
+                            eCVjob.pl Professional
+                            <span title="Najczęściej wybierany szablon" style="font-size: 1.5em; color: #ffd700; vertical-align: middle;">🏆</span>
+                        </h3>
+                        <div style="margin-bottom: 0.5em;">
+                            <span title="Ocena 5/5" style="color: #ffd700; font-size: 1.3em;">
+                                ★★★★★
+                            </span>
+                            <span style="color: #888; font-size: 0.95em; margin-left: 0.5em;">Najczęściej wybierany</span>
+                        </div>
                         <p>Autorski szablon z systemem ocen umiejętności, miejscem na zdjęcie i designem eCVjob.pl.</p>
-                        <button class="template-button" onclick="window.location.href='kreator-formularz.html'">
+                        <button class="template-button" onclick="window.location.href='cv-form.html'">
                             Wybierz szablon
                         </button>
                     </div>
@@ -2538,21 +2254,22 @@
                     </h3>
                     <div style="
                         display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
                         gap: 1.5rem;
                         color: #fff;
                         font-size: 1rem;
                         line-height: 1.6;
+                        overflow: visible;
                     ">
-                        <div>
+                        <div style="min-width:0; overflow-wrap:anywhere; word-break:break-word; hyphens:auto; -webkit-hyphens:auto;">
                             <strong style="color: #00ff00;">✅ Pierwszy na rynku</strong><br>
                             Zostań jednym z pierwszych twórców i zdominuj niszę!
                         </div>
-                        <div>
+                        <div style="min-width:0; overflow-wrap:anywhere; word-break:break-word; hyphens:auto; -webkit-hyphens:auto;">
                             <strong style="color: #ffd700;">✅ Pasywny dochód</strong><br>
                             Raz stworzony szablon = zarobki przez lata!
                         </div>
-                        <div>
+                        <div style="min-width:0; overflow-wrap:anywhere; word-break:break-word; hyphens:auto; -webkit-hyphens:auto;">
                             <strong style="color: #ff6600;">✅ Zero ryzyka</strong><br>
                             Nie płacisz nic z góry - zarabiasz od pierwszej sprzedaży!
                         </div>
@@ -2562,29 +2279,19 @@
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 eCVjob.pl. Wszelkie prawa zastrzeżone.</p>
-    </footer>
+    <!-- Footer removed as per user request -->
 
     <script>
-        // Dynamiczne ładowanie menu.html do <div id="menu"></div>
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('menu.html')
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('menu').innerHTML = html;
-                    // After menu loads, initialize user profile
-                    initializeUserProfile();
-                });
+        // Back button handler with history fallback
+        document.addEventListener('DOMContentLoaded', function(){
+            var backBtn = document.getElementById('global-back-btn');
+            if (backBtn) backBtn.addEventListener('click', function(){
+                if (history.length > 1) { history.back(); } else { window.location.href = 'index.html'; }
+            });
         });
-        // Responsive menu toggle function
-        function toggleExtraMenu() {
-            const navbarExtra = document.querySelector('.navbar-extra');
-            if (navbarExtra) {
-                navbarExtra.classList.toggle('showing');
-            }
-        }
+        
+        // Removed nav/menu; no-op stubs retained intentionally
+        function toggleExtraMenu() { /* no-op: menu removed */ }
 
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

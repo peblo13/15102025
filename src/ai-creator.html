@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Kreator CV - eCVjob.pl</title>
+    <style>
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f0 0%, #222 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .ai-container {
+            max-width: 700px;
+            margin: 56px auto 56px auto;
+            background: rgba(0,0,0,0.92);
+            border: 2.5px solid #00ff00;
+            border-radius: 24px;
+            box-shadow: 0 0 40px #00ff00cc;
+            padding: 44px 38px 38px 38px;
+            color: #e6e6e6;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        h1 {
+            color: #00ff00;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 28px;
+            margin-top: 0;
+            text-shadow: 0 0 18px #00ff00, 0 0 32px #00ff00cc;
+        }
+        label {
+            color: #00fff7;
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-top: 0;
+            display: block;
+            font-size: 1.08rem;
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+        textarea, input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 16px 16px 16px 16px;
+            margin-bottom: 22px;
+            margin-top: 0;
+            border-radius: 12px;
+            border: 2px solid #00ff00;
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            font-size: 1.08rem;
+            box-shadow: 0 0 10px #00ff00cc inset;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        textarea:focus, input:focus {
+            border-color: #00fff7;
+            box-shadow: 0 0 18px #00fff7cc;
+            outline: none;
+        }
+        .ai-btn {
+            background: linear-gradient(45deg, #00ff00, #00fff7);
+            color: #111;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 18px;
+            padding: 18px 48px;
+            margin: 0 auto 24px auto;
+            box-shadow: 0 0 24px #00ff00cc;
+            cursor: pointer;
+            display: block;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+        }
+        .ai-btn:hover {
+            background: linear-gradient(45deg, #00fff7, #00ff00);
+            color: #000;
+            box-shadow: 0 0 32px #00fff7cc;
+        }
+        .ai-preview {
+            margin-top: 36px;
+            margin-bottom: 0;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #00fff7;
+            border-radius: 18px;
+            padding: 32px 28px;
+            color: #fff;
+            box-shadow: 0 0 24px #00fff7cc;
+            min-height: 120px;
+        }
+        .ai-loader {
+            text-align: center;
+            color: #00ff00;
+            font-size: 1.3rem;
+            margin-top: 22px;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="ai-container">
+        <h1>AI Kreator CV</h1>
+        <form id="aiForm" onsubmit="event.preventDefault(); generateAICV();">
+            <label for="prompt">Opisz swój wymarzony szablon CV lub podaj wymagania (np. branża, styl, kolory, układ):</label>
+            <textarea id="prompt" name="prompt" rows="5" placeholder="Napisz, jak ma wyglądać Twój szablon, a AI go wygeneruje..." required></textarea>
+            <button class="ai-btn" type="submit">Wygeneruj szablon z AI</button>
+        </form>
+        <div class="ai-loader" id="aiLoader" style="display:none;">AI generuje Twój szablon...</div>
+        <div class="ai-preview" id="aiPreview">Podgląd wygenerowanego szablonu pojawi się tutaj.</div>
+    </div>
+    <script>
+    function generateAICV() {
+        var prompt = document.getElementById('prompt').value;
+        var loader = document.getElementById('aiLoader');
+        var preview = document.getElementById('aiPreview');
+        loader.style.display = 'block';
+        preview.innerHTML = '';
+        // Symulacja działania AI (tu można podpiąć prawdziwe API)
+        setTimeout(function() {
+            loader.style.display = 'none';
+            preview.innerHTML = '<b>Wygenerowany szablon na podstawie opisu:</b><br><br>' +
+                '<div style="background:#fff;color:#222;padding:18px;border-radius:10px;box-shadow:0 2px 12px #00ff0033;">' +
+                '<h2 style="color:#00b300;">' + escapeHtml(prompt.substring(0, 40)) + '...</h2>' +
+                '<p>To przykładowy podgląd szablonu. Integracja z prawdziwym AI możliwa na życzenie.</p>' +
+                '</div>';
+        }, 1800);
+    }
+    function escapeHtml(text) {
+        var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+    </script>
+</body>
+</html>

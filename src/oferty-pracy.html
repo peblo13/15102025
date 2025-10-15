@@ -24,6 +24,20 @@
             min-height: 100vh;
             line-height: 1.6;
         }
+        /* Fixed, fitted background on small screens */
+        @media (max-width: 768px) {
+            body { background: transparent !important; }
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: url('images/tlo.jpg') no-repeat center center;
+                background-size: cover;
+                z-index: -1;
+                pointer-events: none;
+                transform: translateZ(0);
+            }
+        }
         
         /* Header */
         /* Modal parent for proper scrolling and centering (do not force display) */
@@ -40,6 +54,10 @@
             /* top: 0; */
             /* z-index: 1000; */
         }
+        /* Global back button (zawsze dostępny) */
+    .back-btn { position: fixed; top: calc(14px + env(safe-area-inset-top)); left: 14px; z-index: 9999; background: rgba(0,0,0,0.8); color:#00ff00; border:2px solid #00ff00; border-radius: 12px; padding: 10px 14px; font-weight: 800; letter-spacing: .5px; box-shadow: 0 6px 24px rgba(0,255,0,.25); cursor: pointer; }
+        .back-btn:active { transform: scale(.98) }
+        @media (max-width: 768px) { .back-btn { font-size: 14px } }
         
         .nav-container {
             max-width: 1200px;
@@ -227,7 +245,7 @@
                 font-size: 1.1rem;
             }
         }
-        }
+        
         
         .form-group {
             display: flex;
@@ -461,6 +479,7 @@
           border-radius: 15px;
           border: 2px solid #00ff00;
           box-shadow: 0 4px 20px rgba(0,255,0,0.3);
+                    overflow: hidden; /* zapobiega nachodzeniu krawędzi i wyciekom efektów */
         }
         
         .pagination-btn {
@@ -725,6 +744,47 @@
                 padding: 20px 4vw;
             }
         }
+        /* Ujednolicenie menu mobilnego z index.html: wyłącz tryb szuflady/overlay */
+        @media (max-width: 900px) {
+            .hamburger { display: none !important; }
+            .nav-menu {
+                position: static !important;
+                right: auto !important;
+                width: auto !important;
+                max-width: none !important;
+                height: auto !important;
+                background: transparent !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                gap: 1rem !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+            }
+            .nav-menu li { margin: 0 !important; width: auto !important; }
+            .nav-menu a { padding: 8px 10px !important; font-size: 1rem !important; }
+        }
+                /* Ulepszenia paginacji na małych ekranach (iPhone) */
+                @media (max-width: 600px) {
+                    .pagination-bar {
+                        padding: 12px 10px;
+                        gap: 6px;
+                        border-radius: 12px;
+                    }
+                    .pagination-btn {
+                        padding: 10px 12px;
+                        min-width: 38px;
+                        border-radius: 8px;
+                    }
+                    .pagination-advanced-nav {
+                        width: 100%;
+                        margin-left: 0;
+                        justify-content: center;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                    }
+                    .pagination-jump-input { width: 56px; }
+                    .pagination-jump-btn { padding: 8px 10px; }
+                }
         /* Menu zawsze rozwinięte na najmniejszych ekranach (identycznie jak index.html/uslugi.html) */
         @media (max-width: 480px) {
             .hamburger {
@@ -776,25 +836,8 @@
 <body>
     <!-- Dekoracyjne logo po prawej stronie, pod wszystkimi sekcjami -->
     <img src="images/logo.png" alt="Logo" style="position:fixed; top:80px; right:0; width:180px; opacity:0.13; z-index:0; pointer-events:none; user-select:none;" />
-    <!-- Header -->
-    <header class="header">
-        <nav class="nav-container">
-            <a href="index.html" class="logo">eCVjob.pl</a>
-            <div class="hamburger" id="hamburger-menu" aria-label="Otwórz menu" tabindex="0">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <ul class="nav-menu" id="main-nav-menu">
-                <li><a href="index.html">Strona główna</a></li>
-                <li><a href="index.html#baza-cv">Baza CV</a></li>
-                <li><a href="oferty-pracy.html">Oferty pracy</a></li>
-                <li><a href="uslugi.html">Usługi</a></li>
-                <li><a href="index.html#kreator-cv">Kreator CV</a></li>
-                <li><a href="marketplace.html">💰 Marketplace</a></li>
-            </ul>
-        </nav>
-    </header>
+    <!-- Przycisk Wstecz (zawsze widoczny) -->
+    <button id="backBtn" class="back-btn" type="button">← Wstecz</button>
 
     <!-- Main Content -->
     <main class="main-container">
@@ -1170,6 +1213,8 @@
                             filteredOffers = [...allOffers];
                             updateStats();
                             displayOffers();
+                            // Zastosuj filtr z URL (q/title/company)
+                            try { applyQueryFromURL(); } catch(_) {}
                         },
                         error: function(error) {
                             console.error('❌ Błąd ładowania CSV:', error);
@@ -1191,6 +1236,35 @@
                         </div>
                     `;
                 });
+        }
+
+        // Prefiltruj oferty z parametrów URL
+        function applyQueryFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const q = (params.get('q') || '').trim();
+            const title = (params.get('title') || '').trim();
+            const company = (params.get('company') || '').trim();
+            if (!allOffers || !allOffers.length) return;
+            if (!q && !title && !company) return;
+            const qLower = q.toLowerCase();
+            const tLower = title.toLowerCase();
+            const cLower = company.toLowerCase();
+            filteredOffers = allOffers.filter(offer => {
+                const stanowisko = String(offer['Stanowisko'] || '').toLowerCase();
+                const pracodawca = String(offer['Pracodawca'] || '').toLowerCase();
+                const matchesQ = q ? (stanowisko.includes(qLower) || pracodawca.includes(qLower)) : true;
+                const matchesT = title ? stanowisko.includes(tLower) : true;
+                const matchesC = company ? pracodawca.includes(cLower) : true;
+                return matchesQ && matchesT && matchesC;
+            });
+            currentPage = 1;
+            updateStats();
+            displayOffers();
+            // Ustaw wartości w polach wyszukiwania
+            const titleInput = document.getElementById('jobTitle');
+            const locInput = document.getElementById('jobLocation');
+            if (titleInput && (q || title)) titleInput.value = q || title;
+            if (locInput) locInput.value = '';
         }
 
         // Update statistics
@@ -1666,5 +1740,17 @@
             console.log('📋 Szczegóły:', jobTitle, 'w', company);
         }
     </script>
+        <script>
+            // Obsługa przycisku Wstecz (z fallbackiem do strony głównej)
+            document.addEventListener('DOMContentLoaded', function(){
+                var btn = document.getElementById('backBtn');
+                if (btn) {
+                    btn.addEventListener('click', function(){
+                        if (history.length > 1) { history.back(); }
+                        else { location.href = 'index.html'; }
+                    });
+                }
+            });
+        </script>
 </body>
 </html>

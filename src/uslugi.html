@@ -12,7 +12,7 @@
     <link rel="preload" href="./images/tlo.jpg" as="image">
     <style>
         /* --- Paginacja: identyczny styl jak oferty-pracy.html --- */
-        .pagination-bar {
+                .pagination-bar {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
@@ -24,6 +24,7 @@
           border-radius: 15px;
           border: 2px solid #00ff00;
           box-shadow: 0 4px 20px rgba(0,255,0,0.3);
+                    overflow: hidden; /* zapobiega nachodzeniu krawędzi i wyciekom efektów */
         }
         .pagination-btn {
           position: relative;
@@ -250,97 +251,38 @@
             min-height: 100vh;
             line-height: 1.6;
         }
-        .main-nav {
-            width: 100%;
-            background: rgba(0,0,0,0.92);
-            border-bottom: 2.5px solid #00ff00;
-            box-shadow: 0 2px 20px #00ff00, 0 0 40px rgba(0,255,0,0.15);
-            /* position: sticky; */
-            /* top: 0; */
-            /* z-index: 1000; */
+        /* Fixed, fitted background on small screens */
+        @media (max-width: 768px) {
+            body { background: transparent !important; }
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: url('images/tlo.jpg') no-repeat center center;
+                background-size: cover;
+                z-index: -1;
+                pointer-events: none;
+                transform: translateZ(0);
+            }
         }
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #00ff00;
-            text-decoration: none;
-        }
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            margin: 0;
-            padding: 0;
-        }
-        .nav-menu li {
-            display: flex;
-            align-items: center;
-        }
-        .nav-menu a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 0.7rem 1.5rem;
-            border-radius: 10px;
-            border: 2px solid transparent;
-            font-size: 1.08rem;
-            letter-spacing: 0.5px;
-            transition: background 0.2s, color 0.2s, box-shadow 0.2s, border 0.2s;
-            box-shadow: 0 2px 12px rgba(0,255,0,0.08);
-        }
-        .nav-menu a:hover, .nav-menu a:focus {
-            background: #00ff00;
-            color: #111;
-            border: 2px solid #00ff00;
-            box-shadow: 0 4px 18px #00ff0033;
-        }
+        /* Globalny przycisk Wstecz (zawsze widoczny) */
+        .back-btn { position: fixed; top: calc(14px + env(safe-area-inset-top)); left: 14px; z-index: 9999; background: rgba(0,0,0,0.8); color:#00ff00; border:2px solid #00ff00; border-radius: 12px; padding: 10px 14px; font-weight: 800; letter-spacing: .5px; box-shadow: 0 6px 24px rgba(0,255,0,.25); cursor: pointer; }
+        .back-btn:active { transform: scale(.98) }
+        @media (max-width: 768px) { .back-btn { font-size: 14px } }
         .main-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
         }
-        @media (max-width: 900px) {
-            .nav-menu {
-                gap: 0.5rem;
-            }
-            .nav-menu a {
-                font-size: 1rem;
-                padding: 0.5rem 0.7rem;
-            }
+        /* Mobile dopracowanie paginacji (iPhone) */
+        @media (max-width: 600px) {
+            .pagination-bar { padding: 12px 10px; gap: 6px; border-radius: 12px; }
+            .pagination-btn { padding: 10px 12px; min-width: 38px; border-radius: 8px; }
+            .pagination-advanced-nav { width: 100%; margin-left: 0; justify-content: center; flex-wrap: wrap; gap: 8px; }
+            .pagination-jump-input { width: 56px; }
+            .pagination-jump-btn { padding: 8px 10px; }
         }
-        @media (max-width: 700px) {
-            .nav-container {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 0 8px;
-            }
-            .nav-menu {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.5rem;
-                width: 100%;
-                padding: 10px 0;
-            }
-            .nav-menu li {
-                width: 100%;
-            }
-            .nav-menu a {
-                width: 100%;
-                text-align: left;
-                font-size: 1rem;
-                padding: 0.7rem 1rem;
-            }
-        }
-        /* .main-container i .logo są już poniżej, usuwamy powielenie */
-        }
+    /* .main-container i .logo są już poniżej, usuwamy powielenie */
         .add-service-btn {
             background: linear-gradient(100deg, #00ff00 0%, #FFD700 40%, #FF9100 100%);
             color: #fff;
@@ -359,6 +301,9 @@
             outline: 4px solid #FFD70077;
             text-shadow: 0 4px 24px #FFD700cc, 0 0 16px #fff;
             display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 92vw; /* nie wychodzi poza ekran */
             user-select: none;
         }
         .add-service-btn:hover, .add-service-btn:focus {
@@ -378,6 +323,9 @@
                 font-size: 1.2rem;
                 padding: 16px 18px;
                 border-radius: 18px;
+                width: 90vw; /* precyzyjne wyśrodkowanie i ucięcie efektów na krawędziach */
+                box-shadow: 0 8px 28px 0 #FFD700aa, 0 2px 12px 0 #00ff0033; /* mniejsze poświaty na mobile */
+                outline: 3px solid #FFD70055;
             }
         }
         .stats-section {
@@ -563,19 +511,8 @@
 <body>
     <!-- Dekoracyjne logo po prawej stronie, pod wszystkimi sekcjami -->
     <img src="images/logo.png" alt="Logo" style="position:fixed; top:80px; right:0; width:180px; opacity:0.13; z-index:0; pointer-events:none; user-select:none;" />
-    <nav class="main-nav">
-        <div class="nav-container">
-            <a href="index.html" class="logo">eCVjob.pl</a>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="index.html">Strona główna</a></li>
-                <li><a href="index.html#baza-cv">Baza CV</a></li>
-                <li><a href="oferty-pracy.html">Oferty pracy</a></li>
-                <li><a href="uslugi.html">Usługi</a></li>
-                <li><a href="index.html#kreator-cv">Kreator CV</a></li>
-                <li><a href="marketplace.html">💰 Marketplace</a></li>
-            </ul>
-        </div>
-    </nav>
+    <!-- Przycisk Wstecz zamiast paska nawigacji -->
+    <button id="backBtn" class="back-btn" type="button" aria-label="Wróć">← Wstecz</button>
     <main class="main-container">
         <div style="text-align:center; margin-bottom: 30px;">
             <button id="addServiceBtn" class="add-service-btn" type="button"
@@ -598,36 +535,241 @@
                     transition: background 0.22s, box-shadow 0.22s, transform 0.18s, color 0.18s;
                 "
             >Dodaj usługę</button>
-            <div id="addServiceModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center;">
-              <div style="background:#222; padding:40px 30px; border-radius:20px; max-width:500px; width:90%; box-shadow:0 8px 40px #00ff0033; color:#fff; position:relative; max-height:90vh; overflow-y:auto; display:flex; flex-direction:column;">
-                <button id="closeAddServiceModalBtn" type="button" style="position:absolute; top:18px; right:18px; background:none; border:none; color:#00ff00; font-size:2rem; cursor:pointer;">&times;</button>
-                <h2 style="color:#00ff00; margin-bottom:18px; text-align:center;">Dodaj usługę</h2>
-                <form id="addServiceForm">
-                  <div style="margin-bottom:16px;">
-                    <label for="modalNazwa" style="color:#00ff00; font-weight:bold;">Nazwa usługi*</label>
-                    <input type="text" id="modalNazwa" name="nazwa" required style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
-                  </div>
-                  <div style="margin-bottom:16px;">
-                    <label for="modalOpis" style="color:#00ff00; font-weight:bold;">Opis usługi*</label>
-                    <textarea id="modalOpis" name="opis" required rows="4" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;"></textarea>
-                  </div>
-                  <div style="margin-bottom:16px;">
-                    <label for="modalProvider" style="color:#00ff00; font-weight:bold;">Wykonawca*</label>
-                    <input type="text" id="modalProvider" name="provider" required style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
-                  </div>
-                  <div style="margin-bottom:16px;">
-                    <label for="modalKontakt" style="color:#00ff00; font-weight:bold;">Kontakt*</label>
-                    <input type="text" id="modalKontakt" name="kontakt" required style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;" placeholder="np. email, telefon">
-                  </div>
-                  <div style="margin-bottom:16px;">
-                    <label for="modalWWW" style="color:#00ff00; font-weight:bold;">Strona www</label>
-                    <input type="url" id="modalWWW" name="www" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;" placeholder="np. https://firma.pl">
-                  </div>
-                  <button type="submit" style="width:100%; background:linear-gradient(90deg,#FFD700,#FFB300); color:#111; font-size:1.3rem; font-weight:bold; padding:16px 0; border:none; border-radius:12px; box-shadow:0 4px 18px #FFD70055; cursor:pointer; margin-bottom:8px;">💾 Dodaj usługę</button>
-                </form>
-                <div id="addServiceMsg" style="margin-top:10px; text-align:center; color:#FFD700; font-weight:bold;"></div>
-              </div>
-            </div>
+                        <div id="addServiceModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:99999; justify-content:center; align-items:center;">
+                            <div id="addServiceCard" style="background:#1b1f1c; padding:30px 26px; border-radius:22px; max-width:980px; width:96%; box-shadow:0 8px 40px #00ff0033; color:#fff; position:relative; max-height:92vh; overflow-y:auto; display:flex; flex-direction:column; border:2px solid #00ff00;">
+                                <button id="closeAddServiceModalBtn" type="button" style="position:absolute; top:14px; right:14px; background:none; border:none; color:#00ff00; font-size:2.2rem; cursor:pointer;">&times;</button>
+                                <h2 style="color:#00ff00; margin:6px 0 18px 0; text-align:center; letter-spacing:1px;">Dodaj usługę</h2>
+                                <form id="addServiceForm" style="display:grid; grid-template-columns: 1fr 1fr; gap:18px;">
+                                    <fieldset style="grid-column:1 / -1; border:1px solid #00ff00; border-radius:12px; padding:14px;">
+                                        <legend style="color:#00ff00; padding:0 8px;">Podstawowe informacje</legend>
+                                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                                            <div>
+                                                <label for="modalNazwa" style="color:#00ff00; font-weight:bold;">Nazwa usługi*</label>
+                                                <input type="text" id="modalNazwa" required style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label for="modalKategoria" style="color:#00ff00; font-weight:bold;">Kategoria*</label>
+                                                <select id="modalKategoria" required style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                                    <option value="">-- wybierz --</option>
+                                                    <option>IT</option>
+                                                    <option>Budownictwo</option>
+                                                    <option>Marketing</option>
+                                                    <option>Księgowość</option>
+                                                    <option>Grafika</option>
+                                                    <option>Prawo</option>
+                                                    <option>Tłumaczenia</option>
+                                                    <option>Sprzątanie</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label for="modalPodkategoria" style="color:#00ff00; font-weight:bold;">Podkategoria</label>
+                                                <select id="modalPodkategoria" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;"></select>
+                                            </div>
+                                            <div>
+                                                <label for="modalTagi" style="color:#00ff00; font-weight:bold;">Tagi (po przecinku)</label>
+                                                <input type="text" id="modalTagi" placeholder="np. www, seo, sklep" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div style="grid-column:1/-1;">
+                                                <label for="modalOpis" style="color:#00ff00; font-weight:bold;">Opis usługi*</label>
+                                                <textarea id="modalOpis" required rows="4" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;"></textarea>
+                                            </div>
+                                            <div style="grid-column:1/-1;">
+                                                <label for="modalZakres" style="color:#00ff00; font-weight:bold;">Zakres prac (szczegóły)</label>
+                                                <textarea id="modalZakres" rows="3" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;"></textarea>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset style="grid-column:1 / -1; border:1px solid #00ff00; border-radius:12px; padding:14px;">
+                                        <legend style="color:#00ff00; padding:0 8px;">Lokalizacja i realizacja</legend>
+                                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:14px;">
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Miasto*</label>
+                                                <input id="modalMiasto" required style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Województwo</label>
+                                                <input id="modalWoj" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Kraj</label>
+                                                <input id="modalKraj" value="Polska" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Tryb*</label>
+                                                <select id="modalTryb" required style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                                    <option>Online</option>
+                                                    <option>Na miejscu</option>
+                                                    <option>Hybrydowo</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Obszar (km)</label>
+                                                <input id="modalObszar" type="number" min="0" placeholder="np. 50" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset style="grid-column:1 / -1; border:1px solid #00ff00; border-radius:12px; padding:14px;">
+                                        <legend style="color:#00ff00; padding:0 8px;">Cennik i dostępność</legend>
+                                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:14px;">
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Cena od</label>
+                                                <input id="modalCenaOd" type="number" min="0" step="0.01" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Cena do</label>
+                                                <input id="modalCenaDo" type="number" min="0" step="0.01" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Waluta</label>
+                                                <select id="modalWaluta" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                                    <option>PLN</option>
+                                                    <option>EUR</option>
+                                                    <option>USD</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Stawka</label>
+                                                <select id="modalStawka" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                                    <option>Godzinowa</option>
+                                                    <option>Projekt</option>
+                                                    <option>Ryczałt</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">VAT</label>
+                                                <select id="modalVAT" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                                    <option>zw</option>
+                                                    <option>23%</option>
+                                                    <option>8%</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Czas realizacji (dni)</label>
+                                                <input id="modalCzasReal" type="number" min="0" placeholder="np. 7" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Ekspres</label>
+                                                <select id="modalEkspres" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                                    <option>Nie</option>
+                                                    <option>Tak</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset style="grid-column:1 / -1; border:1px solid #00ff00; border-radius:12px; padding:14px;">
+                                        <legend style="color:#00ff00; padding:0 8px;">Dane wykonawcy</legend>
+                                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px;">
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Wykonawca*</label>
+                                                <input id="modalProvider" required style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">NIP</label>
+                                                <input id="modalNIP" placeholder="opcjonalnie" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">E-mail / Telefon*</label>
+                                                <input id="modalKontakt" required placeholder="email lub telefon" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">WWW</label>
+                                                <input id="modalWWW" type="url" placeholder="https://" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">LinkedIn</label>
+                                                <input id="modalLI" type="url" placeholder="https://linkedin.com/..." style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Facebook</label>
+                                                <input id="modalFB" type="url" placeholder="https://facebook.com/..." style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset style="grid-column:1 / -1; border:1px solid #00ff00; border-radius:12px; padding:14px;">
+                                        <legend style="color:#00ff00; padding:0 8px;">Portfolio i certyfikaty</legend>
+                                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Portfolio (linki)</label>
+                                                <div id="portfolioList">
+                                                    <input class="portfolio-item" placeholder="https://..." style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff; margin-bottom:8px;">
+                                                </div>
+                                                <button type="button" id="addPortfolioBtn" style="background:#00ff00;color:#111;border:none;border-radius:8px;padding:8px 12px;font-weight:bold;cursor:pointer;">+ Dodaj link</button>
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Certyfikaty</label>
+                                                <div id="certList">
+                                                    <input class="cert-item" placeholder="np. Google Ads, ISO..." style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff; margin-bottom:8px;">
+                                                </div>
+                                                <button type="button" id="addCertBtn" style="background:#00ff00;color:#111;border:none;border-radius:8px;padding:8px 12px;font-weight:bold;cursor:pointer;">+ Dodaj certyfikat</button>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset style="grid-column:1 / -1; border:1px solid #00ff00; border-radius:12px; padding:14px;">
+                                        <legend style="color:#00ff00; padding:0 8px;">Ustawienia ogłoszenia</legend>
+                                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px; align-items:end;">
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Język obsługi</label>
+                                                <input id="modalJezyki" placeholder="np. PL, EN" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Gwarancja (dni)</label>
+                                                <input id="modalGwar" type="number" min="0" placeholder="np. 30" style="width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff;">
+                                            </div>
+                                            <div>
+                                                <label style="color:#00ff00; font-weight:bold;">Wyróżnienie PREMIUM (+49,99 zł)</label>
+                                                <select id="modalPremium" style="width:100%; padding:10px; border-radius:8px; border:2px solid #FFD700; background:#111; color:#FFD700;">
+                                                    <option value="">Nie</option>
+                                                    <option value="1">Tak</option>
+                                                </select>
+                                                <div id="premiumPayNote" style="display:none; color:#FFD700; font-size:0.95rem; margin-top:6px;">Wybrano wyróżnienie PREMIUM: +49,99 zł brutto</div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <div style="grid-column:1 / -1; display:flex; align-items:center; gap:12px; margin-top:8px;">
+                                        <input id="modalReg" type="checkbox" required>
+                                        <label for="modalReg">Akceptuję regulamin i politykę prywatności</label>
+                                    </div>
+                                    <div id="addServiceMsg" style="grid-column:1 / -1; color:#FFD700; font-weight:bold;"></div>
+                                                                        <div class="btn-row" style="grid-column:1 / -1; display:flex; gap:12px; justify-content:flex-end; margin-top:8px;">
+                                        <button type="button" id="cancelServiceBtn" style="background:#333;color:#fff;border:1px solid #555;border-radius:10px;padding:12px 18px;cursor:pointer;">Anuluj</button>
+                                        <button type="submit" style="background:linear-gradient(90deg,#00ff00,#00fff7); color:#111; font-size:1.05rem; font-weight:bold; padding:12px 22px; border:none; border-radius:12px; box-shadow:0 4px 18px #00ff0033; cursor:pointer;">💾 Zapisz usługę</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                                                                        <style>
+                                                    /* Responsywne poprawki formularza dodawania usługi i paska wyszukiwania */
+                                                                            #addServiceCard, #addServiceCard * { box-sizing: border-box; }
+                                                                            #addServiceCard { overflow-x: hidden; }
+                                                                            /* Elastyczne kolumny zapobiegające "wypychaniu" prawej krawędzi */
+                                                                            #addServiceForm { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important; }
+                                                                            #addServiceForm fieldset > div { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important; }
+                                                                            #addServiceForm input,
+                                                                            #addServiceForm select,
+                                                                            #addServiceForm textarea { width: 100% !important; max-width: 100% !important; min-width: 0 !important; overflow: hidden; text-overflow: ellipsis; word-break: break-word; }
+                                                                            #addServiceForm .btn-row button { min-width: 0; }
+                                                    @media (max-width: 1200px) {
+                                                        #addServiceCard { max-width: 95vw !important; width: 95vw !important; padding: 22px !important; }
+                                                                                #addServiceForm { grid-template-columns: 1fr !important; gap: 14px !important; }
+                                                                                #addServiceForm fieldset > div { grid-template-columns: 1fr !important; gap: 12px !important; }
+                                                    }
+                                                    @media (max-width: 780px) {
+                                                        #addServiceCard { max-width: 96vw !important; width: 96vw !important; padding: 16px !important; border-radius: 16px !important; }
+                                                        #addServiceForm { grid-template-columns: 1fr !important; gap: 12px !important; }
+                                                        #addServiceForm fieldset { padding: 12px !important; }
+                                                        #addServiceForm fieldset > div { grid-template-columns: 1fr !important; gap: 10px !important; }
+                                                        .btn-row { flex-direction: column !important; align-items: stretch !important; }
+                                                        #serviceSearchForm { display: grid !important; grid-template-columns: 1fr !important; justify-items: stretch !important; }
+                                                        #serviceSearchForm input { width: 100% !important; max-width: none !important; margin: 6px 0 !important; }
+                                                        #serviceSearchForm button { width: 100% !important; }
+                                                    }
+                                                </style>
         </div>
         <div class="page-title">
             <h1>🛠️ Usługi</h1>
@@ -972,6 +1114,13 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+                    // Otwórz modal po kliknięciu w przycisk "Dodaj usługę"
+                    const openBtn = document.getElementById('addServiceBtn');
+                    if (openBtn) {
+                        openBtn.addEventListener('click', () => {
+                            document.getElementById('addServiceModal').style.display = 'flex';
+                        });
+                    }
           // Obsługa wyszukiwarki usług
           const searchForm = document.getElementById('serviceSearchForm');
           const searchInput = document.getElementById('serviceSearchInput');
@@ -1005,83 +1154,197 @@
               closeAddServiceModal();
             });
           }
+                    const cancelBtn = document.getElementById('cancelServiceBtn');
+                    if (cancelBtn) {
+                        cancelBtn.addEventListener('click', closeAddServiceModal);
+                    }
+                    // Dynamiczne pola: podkategorie, portfolio, certyfikaty
+                    const katSelect = document.getElementById('modalKategoria');
+                    const subSelect = document.getElementById('modalPodkategoria');
+                    const subMap = {
+                        'IT': ['Strony WWW', 'Sklepy', 'SEO', 'DevOps', 'Aplikacje'],
+                        'Budownictwo': ['Remonty', 'Wykończenia', 'Elewacje', 'Dachy'],
+                        'Marketing': ['Social Media', 'Kampanie Ads', 'Content'],
+                        'Księgowość': ['KPiR', 'Pełna', 'Kadry'],
+                        'Grafika': ['Logo', 'Branding', 'UI/UX'],
+                        'Prawo': ['Firmowe', 'Cywilne', 'Podatkowe'],
+                        'Tłumaczenia': ['PL-EN', 'EN-PL', 'Specjalistyczne'],
+                        'Sprzątanie': ['Biura', 'Domy', 'Poremontowe']
+                    };
+                    if (katSelect && subSelect) {
+                        katSelect.addEventListener('change', () => {
+                            const v = katSelect.value;
+                            subSelect.innerHTML = '';
+                            (subMap[v] || []).forEach(s => {
+                                const o = document.createElement('option');
+                                o.textContent = s;
+                                subSelect.appendChild(o);
+                            });
+                        });
+                                    // Ustaw wstępne podkategorie dla domyślnej kategorii
+                                    if (katSelect.value) {
+                                        const evt = new Event('change');
+                                        katSelect.dispatchEvent(evt);
+                                    }
+                    }
+                    const portfolioList = document.getElementById('portfolioList');
+                    const addPortfolioBtn = document.getElementById('addPortfolioBtn');
+                    if (addPortfolioBtn && portfolioList) {
+                        addPortfolioBtn.addEventListener('click', () => {
+                            const inp = document.createElement('input');
+                            inp.className = 'portfolio-item';
+                            inp.placeholder = 'https://...';
+                            inp.style.cssText = 'width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff; margin-bottom:8px;';
+                            portfolioList.appendChild(inp);
+                        });
+                    }
+                    const certList = document.getElementById('certList');
+                    const addCertBtn = document.getElementById('addCertBtn');
+                    if (addCertBtn && certList) {
+                        addCertBtn.addEventListener('click', () => {
+                            const inp = document.createElement('input');
+                            inp.className = 'cert-item';
+                            inp.placeholder = 'np. Google Ads, ISO...';
+                            inp.style.cssText = 'width:100%; padding:10px; border-radius:8px; border:2px solid #00ff00; background:#111; color:#fff; margin-bottom:8px;';
+                            certList.appendChild(inp);
+                        });
+                    }
           // Obsługa formularza dodawania usługi
           const form = document.getElementById('addServiceForm');
           if (form) {
             form.onsubmit = function(e) {
               e.preventDefault();
-              const nazwa = document.getElementById('modalNazwa').value.trim();
-              const opis = document.getElementById('modalOpis').value.trim();
-              const provider = document.getElementById('modalProvider').value.trim();
-              const kontakt = document.getElementById('modalKontakt').value.trim();
-              const www = document.getElementById('modalWWW').value.trim();
+                            // Pobierz wszystkie pola z rozbudowanego formularza (bezpiecznie)
+                            const gv = (id) => {
+                                const el = document.getElementById(id);
+                                if (!el) return '';
+                                if (el.tagName === 'SELECT') return (el.value || '').toString().trim();
+                                return (el.value || '').toString().trim();
+                            };
+                            const nazwa = gv('modalNazwa');
+                            const opis = gv('modalOpis');
+                            const kategoria = gv('modalKategoria');
+                            const podkat = gv('modalPodkategoria');
+                            const tagi = gv('modalTagi');
+                            const zakres = gv('modalZakres');
+                            const miasto = gv('modalMiasto');
+                            const woj = gv('modalWoj');
+                            const kraj = gv('modalKraj');
+                            const tryb = gv('modalTryb');
+                            const obszar = gv('modalObszar');
+                            const cenaOd = gv('modalCenaOd');
+                            const cenaDo = gv('modalCenaDo');
+                            const waluta = gv('modalWaluta');
+                            const stawka = gv('modalStawka');
+                            const vat = gv('modalVAT');
+                            const czasReal = gv('modalCzasReal');
+                            const ekspres = gv('modalEkspres');
+                            const provider = gv('modalProvider');
+                            const nip = gv('modalNIP');
+                            const kontakt = gv('modalKontakt');
+                            const www = gv('modalWWW');
+                            const li = gv('modalLI');
+                            const fb = gv('modalFB');
+                            const jezyki = gv('modalJezyki');
+                            const gwar = gv('modalGwar');
+                                            const premiumEl = document.getElementById('modalPremium');
+                                            let premiumVal = false;
+                                            if (premiumEl) {
+                                                if (premiumEl.type === 'checkbox') premiumVal = premiumEl.checked;
+                                                else premiumVal = ['tak','true','1','on','yes'].includes((premiumEl.value || '').toString().trim().toLowerCase());
+                                            }
+                              const portfolio = Array.from(document.querySelectorAll('#portfolioList .portfolio-item')).map(i => i.value.trim()).filter(Boolean);
+                            const certs = Array.from(document.querySelectorAll('#certList .cert-item')).map(i => i.value.trim()).filter(Boolean);
               let msg = '✅ Usługa została dodana!';
               document.getElementById('addServiceMsg').textContent = msg;
-              allServices.unshift({
-                'Nazwa': nazwa,
-                'Opis': opis,
-                'Wykonawca': provider,
-                'Kontakt': kontakt,
-                'WWW': www
-              });
+                            allServices.unshift({
+                                'Nazwa': nazwa,
+                                'Opis': opis,
+                                'Zakres': zakres,
+                                'Kategoria': kategoria,
+                                'Podkategoria': podkat,
+                                'Tagi': tagi,
+                                'Lokalizacja': [miasto, woj, kraj].filter(Boolean).join(', '),
+                                'Tryb': tryb,
+                                'Obszar': obszar,
+                                'CenaOd': cenaOd,
+                                'CenaDo': cenaDo,
+                                'Waluta': waluta,
+                                'Stawka': stawka,
+                                'VAT': vat,
+                                'CzasRealizacji': czasReal,
+                                'Ekspres': ekspres,
+                                'Wykonawca': provider,
+                                'NIP': nip,
+                                'Kontakt': kontakt,
+                                'WWW': www,
+                                'LinkedIn': li,
+                                'Facebook': fb,
+                                'Języki': jezyki,
+                                'Gwarancja': gwar,
+                                                'Premium': premiumVal,
+                                                'PremiumFeePLN': premiumVal ? 49.99 : 0,
+                                'Portfolio': portfolio,
+                                'Certyfikaty': certs
+                            });
               filteredServices = [...allServices];
               updateStats();
               displayServices();
               setTimeout(closeAddServiceModal, 1800);
             };
           }
+
+                                    // ESC zamyka modal dodawania usługi
+                                    document.addEventListener('keydown', (ev) => {
+                                        if (ev.key === 'Escape') {
+                                            const modal = document.getElementById('addServiceModal');
+                                            if (modal && modal.style.display !== 'none') closeAddServiceModal();
+                                        }
+                                    });
+
+                                                // Pokaż notkę o dopłacie przy wyborze premium
+                                                const premiumSelect = document.getElementById('modalPremium');
+                                                const premiumNote = document.getElementById('premiumPayNote');
+                                                if (premiumSelect && premiumNote) {
+                                                    const toggleNote = () => {
+                                                        const v = (premiumSelect.value || '').toString();
+                                                        premiumNote.style.display = v === '1' ? 'block' : 'none';
+                                                    };
+                                                    premiumSelect.addEventListener('change', toggleNote);
+                                                    toggleNote();
+                                                }
           // Automatyczne ładowanie usług po załadowaniu strony
           loadServices();
         });
         function loadServices() {
-            // Ładowanie usług z pliku CSV
-            fetch('uslugi.csv')
-                .then(response => {
-                    if (!response.ok) throw new Error('Plik uslugi.csv nie jest dostępny na serwerze.');
-                    Papa.parse('uslugi.csv', {
-                        download: true,
-                        header: true,
-                        delimiter: ';',
-                        skipEmptyLines: true,
-                        complete: function(results) {
-                            const cleaned = results.data.map(service => {
-                                const obj = {};
-                                Object.keys(service).forEach(key => {
-                                    let val = service[key];
-                                    if (typeof val === 'string') {
-                                        val = val.replace(/^'*"?|"?'*$/g, '').trim();
-                                    }
-                                    obj[key.trim()] = val;
-        });
-                                return obj;
-                            });
-                            // Zamiana kluczy na spójne z resztą kodu
-                            allServices = cleaned.map(s => ({
-                                'Nazwa': s['Nazwa usługi'] || s['Nazwa'] || '',
-                                'Opis': s['Opis'] || '',
-                                'Kategoria': s['Kategoria'] || '',
-                                'Lokalizacja': s['Lokalizacja'] || '',
-                                'Wykonawca': s['Wykonawca'] || s['Kontakt'] || '',
-                                'Kontakt': s['Kontakt'] || '',
-                                'Premium': s['Premium'] || '',
-                                'WWW': s['WWW'] || ''
-                            })).filter(s => s['Nazwa'] && s['Kategoria']);
-                            filteredServices = [...allServices];
-                            if (allServices.length === 0) {
-                                document.getElementById('serviceCardsContainer').innerHTML = `<div style='color:#FFD700;text-align:center;padding:20px;'>Nie wczytano żadnych usług z pliku uslugi.csv</div>`;
-                            } else {
-                                updateStats();
-                                displayServices();
-                            }
-                        },
-                        error: function(error) {
-                            document.getElementById('serviceCardsContainer').innerHTML = `<div style=\"text-align: center; color: #ff2222; padding: 40px;\"><h3>❌ Błąd ładowania usług</h3><p>Nie udało się załadować usług. Spróbuj odświeżyć stronę lub sprawdź czy plik uslugi.csv jest dostępny i nie blokuje go CORS.</p></div>`;
-                        }
-                    });
-                })
-                .catch(error => {
-                    document.getElementById('serviceCardsContainer').innerHTML = `<div style=\"text-align: center; color: #ff2222; padding: 40px;\"><h3>❌ Błąd połączenia z plikiem usług</h3><p>${error.message || 'Nie można połączyć się z plikiem uslugi.csv.'}<br>Upewnij się, że plik uslugi.csv jest w tym samym katalogu i nie blokuje go CORS.</p></div>`;
+            // Generowanie 101 przykładowych usług w JS (zamiast CSV)
+            const kategorie = ['IT', 'Budownictwo', 'Marketing', 'Księgowość', 'Grafika', 'Prawo', 'Tłumaczenia', 'Sprzątanie'];
+            const miasta = ['Warszawa', 'Kraków', 'Gdańsk', 'Poznań', 'Wrocław', 'Łódź', 'Katowice', 'Toruń', 'Online'];
+            const firmy = ['Uniwersal Bud', 'TechFlow', 'GreenSoft', 'ProMark', 'FinServ', 'ArtVision', 'Lexis', 'CleanPro'];
+            const wwws = ['https://example.com', 'https://firma.pl', 'https://twojabiznes.pl', ''];
+
+            const generated = [];
+            for (let i = 1; i <= 101; i++) {
+                const kat = kategorie[i % kategorie.length];
+                const miasto = miasta[i % miasta.length];
+                const firma = firmy[i % firmy.length];
+                const isPremium = (i % 10 === 0) ? '1' : ''; // co 10. ogłoszenie premium
+                const www = wwws[i % wwws.length];
+                generated.push({
+                    'Nazwa': `${kat} - Usługa #${i}`,
+                    'Opis': `Opis przykładowej usługi #${i} w kategorii ${kat}. Profesjonalna realizacja, szybkie terminy i konkurencyjna cena.`,
+                    'Kategoria': kat,
+                    'Lokalizacja': miasto,
+                    'Wykonawca': firma,
+                    'Kontakt': `kontakt${i}@${firma.replace(/\s+/g,'').toLowerCase()}.pl`,
+                    'Premium': isPremium,
+                    'WWW': www
                 });
+            }
+            allServices = generated;
+            filteredServices = [...allServices];
+            updateStats();
+            displayServices();
         }
 
         function updateStats() {
@@ -1131,15 +1394,13 @@
                 const lokalizacja = service['Lokalizacja'] ? `<span class="job-company">${service['Lokalizacja']}</span>` : '';
                 const email = service['Kontakt'] ? encodeURIComponent(service['Kontakt']) : '';
                 const btnId = `contact-btn-${start + idx}`;
-                // Jeśli usługa jest premium (pole Premium == '1' lub 'tak' lub inne kryterium)
                 const isPremium = service['Premium'] && (service['Premium'] === '1' || service['Premium'].toLowerCase() === 'tak');
                 if (isPremium) {
-                    // Lokalizacja nad overlay, z jaśniejszym stylem
                     servicesHTML += `
-                    <div class=\"job-card premium-card\">\n                        <div class=\"job-header\">\n                            <div>\n                                <div class=\"job-title\" style=\"color:#fff; font-size:2rem; text-shadow:0 2px 24px #FFD700, 0 0 12px #fff; z-index:2; position:relative;\">${service['Nazwa']}</div>\n                                <!-- wykonawca/email ukryty w premium -->\n                            </div>\n                            ${lokalizacjaPremium}\n                        </div>\n                        <div class=\"premium-overlay\"></div>\n                        <div class=\"premium-label\">PREMIUM</div>\n                        <div class=\"job-description\" style=\"color:#fff; font-size:1.15rem; text-shadow:0 0 16px #FFD700, 0 0 8px #fff; z-index:2; position:relative;\">${service['Opis']}</div>\n                        <div class=\"job-actions\" style=\"z-index:2; position:relative;\">\n                            <button class=\"btn-contact\" id=\"${btnId}\" data-email=\"${email}\" data-nazwa=\"${encodeURIComponent(service['Nazwa'] || '')}\" data-wykonawca=\"${encodeURIComponent(wykonawca)}\" style=\"background:linear-gradient(90deg,#FFD700,#FFB300);color:#111;box-shadow:0 0 10px #FFD700;\">📧 Kontakt</button>\n                            ${service['WWW'] ? `<button class='btn-details' style=\"border-color:#FFD700;color:#FFD700;\" onclick=\\"window.open('${service['WWW']}', '_blank')\\">🌐 Strona</button>` : ''}\n                        </div>\n                    </div>\n                    `;
+                    <div class=\"job-card premium-card\">\n                        <div class=\"job-header\">\n                            <div>\n                                <div class=\"job-title\" style=\"color:#fff; font-size:2rem; text-shadow:0 2px 24px #FFD700, 0 0 12px #fff; z-index:2; position:relative;\">${service['Nazwa']}</div>\n                            </div>\n                            ${lokalizacjaPremium}\n                        </div>\n                        <div class=\"premium-overlay\"></div>\n                        <div class=\"premium-label\">PREMIUM</div>\n                        <div class=\"job-description\" style=\"color:#fff; font-size:1.15rem; text-shadow:0 0 16px #FFD700, 0 0 8px #fff; z-index:2; position:relative;\">${service['Opis']}</div>\n                        <div class=\"job-actions\" style=\"z-index:2; position:relative;\">\n                            <button class=\"btn-contact\" id=\"${btnId}\" data-email=\"${email}\" data-nazwa=\"${encodeURIComponent(service['Nazwa'] || '')}\" data-wykonawca=\"${encodeURIComponent(wykonawca)}\">📧 Kontakt</button>\n                            ${service['WWW'] ? `<button class='btn-details' style=\\"border-color:#FFD700;color:#FFD700;\\" onclick=\\"window.open('${service['WWW']}', '_blank')\\">🌐 Strona</button>` : ''}\n                        </div>\n                    </div>\n                    `;
                 } else {
                     servicesHTML += `
-                    <div class=\"job-card\">\n                        <div class=\"job-header\">\n                            <div>\n                                <div class=\"job-title\">${service['Nazwa']}</div>\n                                ${wykonawca ? '' : ''}\n                            </div>\n                            ${lokalizacja}\n                        </div>\n                        <div class=\"job-description\">${service['Opis']}</div>\n                        <div class=\"job-actions\">\n                            <button class=\"btn-contact\" id=\"${btnId}\" data-email=\"${email}\" data-nazwa=\"${encodeURIComponent(service['Nazwa'] || '')}\" data-wykonawca=\"${encodeURIComponent(wykonawca)}\">📧 Kontakt</button>\n                            ${service['WWW'] ? `<button class='btn-details' onclick=\"window.open('${service['WWW']}', '_blank')\">🌐 Strona</button>` : ''}\n                        </div>\n                    </div>\n                    `;
+                    <div class=\"job-card\">\n                        <div class=\"job-header\">\n                            <div>\n                                <div class=\"job-title\">${service['Nazwa']}</div>\n                            </div>\n                            ${lokalizacja}\n                        </div>\n                        <div class=\"job-description\">${service['Opis']}</div>\n                        <div class=\"job-actions\">\n                            <button class=\"btn-contact\" id=\"${btnId}\" data-email=\"${email}\" data-nazwa=\"${encodeURIComponent(service['Nazwa'] || '')}\" data-wykonawca=\"${encodeURIComponent(wykonawca)}\">📧 Kontakt</button>\n                            ${service['WWW'] ? `<button class='btn-details' onclick=\\"window.open('${service['WWW']}', '_blank')\\">🌐 Strona</button>` : ''}\n                        </div>\n                    </div>\n                    `;
                 }
             });
             container.innerHTML = `<div class="service-cards-grid job-offers-grid">${servicesHTML}</div>`;
@@ -1168,6 +1429,19 @@
         }
 
 
-    </script>
+        </script>
+
+<script>
+    // Obsługa przycisku Wstecz (z fallbackiem do strony głównej)
+    document.addEventListener('DOMContentLoaded', function(){
+        var btn = document.getElementById('backBtn');
+        if (btn) {
+            btn.addEventListener('click', function(){
+                if (history.length > 1) { history.back(); }
+                else { location.href = 'index.html'; }
+            });
+        }
+    });
+</script>
 </body>
 </html>

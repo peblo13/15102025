@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>🔍 Baza CV - eCVjob.pl</title>
     
     <!-- SEO & Performance -->
@@ -24,6 +24,20 @@
             color: #fff;
             min-height: 100vh;
             line-height: 1.6;
+        }
+        /* Fixed, fitted background on small screens */
+        @media (max-width: 768px) {
+            body { background: transparent !important; }
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: url('images/tlo.jpg') no-repeat center center;
+                background-size: cover;
+                z-index: -1;
+                pointer-events: none;
+                transform: translateZ(0);
+            }
         }
         
         /* Header & Navigation */
@@ -86,6 +100,24 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 255, 0, 0.4);
         }
+        /* Always-visible fixed back button (do not clash with .back-btn above) */
+        .fixed-back-btn {
+            position: fixed;
+            top: calc(14px + env(safe-area-inset-top));
+            left: 14px;
+            z-index: 9999;
+            background: rgba(0,0,0,0.8);
+            color:#00ff00;
+            border:2px solid #00ff00;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            box-shadow: 0 6px 24px rgba(0,255,0,.25);
+            cursor: pointer;
+        }
+        .fixed-back-btn:active { transform: scale(.98) }
+        @media (max-width: 768px) { .fixed-back-btn { font-size: 14px } }
         
         /* Container */
         .container {
@@ -875,26 +907,15 @@
     </script>
     
     <!-- Header -->
-    <header class="header">
-        <div class="nav-container">
-            <a href="index.html" class="logo">eCVjob.pl</a>
-            <nav>
-                <ul class="nav-menu">
-                    <li><a href="index.html">🏠 Strona główna</a></li>
-                    <li><a href="oferty.html">💼 Oferty pracy</a></li>
-                    <li><a href="kontakt.html">📞 Kontakt</a></li>
-                    <li id="userWelcome" style="color: #00ff00; font-weight: bold;"></li>
-                    <li id="userPlan" style="color: #00fff7; font-weight: bold; margin-left: 1rem;"></li>
-                </ul>
-            </nav>
-            <a href="index.html" class="back-btn">← Powrót</a>
-        </div>
-    </header>
-    
+    <!-- Przycisk Wstecz (zawsze widoczny) -->
+    <button id="backBtn" class="fixed-back-btn" type="button">← Wstecz</button>
     <div class="container">
-        <!-- Hero Section -->
         <section class="hero">
             <h1>🔍 Baza CV</h1>
+            <div id="userBar" style="display:flex; justify-content:center; gap:12px; margin: 8px 0 6px 0;">
+                <span id="userWelcome" style="color:#00ff00; font-weight:bold;"></span>
+                <span id="userPlan" style="color:#00fff7; font-weight:bold;"></span>
+            </div>
             <p class="subtitle">
                 Przeglądaj profesjonalne CV kandydatów i znajdź idealnych pracowników dla swojej firmy
             </p>
@@ -1587,5 +1608,17 @@
         console.log('✅ FINAL SETUP COMPLETED - Enterprise account ready:', finalTestData);
         console.log('✅ Page should now work with Enterprise access!');
     </script>
+        <script>
+            // Obsługa przycisku Wstecz (z fallbackiem)
+            document.addEventListener('DOMContentLoaded', function(){
+                var btn = document.getElementById('backBtn');
+                if (btn) {
+                    btn.addEventListener('click', function(){
+                        if (history.length > 1) { history.back(); }
+                        else { location.href = 'index.html'; }
+                    });
+                }
+            });
+        </script>
 </body>
 </html>

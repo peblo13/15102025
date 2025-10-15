@@ -2,8 +2,9 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Mój Profil - eCVjob.pl</title>
+    <link rel="preload" href="images/tlo.jpg" as="image">
     <style>
         * {
             margin: 0;
@@ -11,13 +12,42 @@
             box-sizing: border-box;
         }
         
+        html, body { height: 100%; }
         body {
             font-family: 'Arial', sans-serif;
-            background: url('images/tlo.jpg') no-repeat center center fixed;
-            background-size: cover;
+            background: transparent; /* Pinned background via ::before */
             color: #fff;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
+        }
+        /* iOS-safe pinned background (sharp, stable) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover; /* Pinned photo, similar to other pages */
+            /* Use same asset for 1x/2x to avoid 404; swap to tlo@2x.jpg when available */
+            background-image: image-set(
+                url('images/tlo.jpg') 1x,
+                url('images/tlo.jpg') 2x
+            );
+            will-change: transform;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            pointer-events: none;
+        }
+        /* Subtle overlay for contrast */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, rgba(10,10,10,0.70) 0%, rgba(26,26,46,0.70) 50%, rgba(22,33,62,0.70) 100%);
+            pointer-events: none;
         }
         
         .container {
@@ -60,6 +90,8 @@
             gap: 30px;
             margin-bottom: 30px;
         }
+        /* Ensure columns can shrink without overflow */
+        .profile-sidebar, .profile-main { min-width: 0; }
         
         .profile-sidebar {
             display: flex;
@@ -144,6 +176,7 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
         }
+        .stats-grid > * { min-width: 0; }
         
         .stat-card {
             background: linear-gradient(135deg, rgba(0,255,0,0.1), rgba(0,255,255,0.1));
@@ -486,6 +519,18 @@
             }
         }
 
+        /* Mobile/iPhone hardening: wrap long text and prevent horizontal leaks */
+        @media (max-width: 480px) {
+            .container, .profile-card, .section-title, .job-offers-section-compact, .analytics-section, .earning-center-section {
+                overflow-wrap: anywhere;
+                word-break: break-word;
+                hyphens: auto;
+            }
+            .profile-layout { gap: 16px; }
+            .analytics-grid, .goals-grid, .career-grid, .earning-grid { grid-template-columns: 1fr; }
+            .goals-grid > *, .career-grid > *, .earning-grid > *, .analytics-grid > * { min-width: 0; }
+        }
+
         /* Styles dla Analytics Dashboard */
         .analytics-section {
             margin-top: 40px;
@@ -700,10 +745,13 @@
 
         .analytics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            /* Mniejsze minimum, żeby nie rozpychać layoutu na iPhonie */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
             margin-bottom: 40px;
         }
+        /* Zapobieganie wyciekaniu poziomemu */
+        .analytics-grid > * { min-width: 0; }
 
         .chart-card {
             background: rgba(0,0,0,0.8);
@@ -730,6 +778,13 @@
             position: relative;
             text-align: center;
         }
+        /* Canvas skaluje się do szerokości kontenera na mobile */
+        .chart-container canvas {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
 
         .chart-legend {
             margin-top: 20px;
@@ -737,6 +792,7 @@
             flex-direction: column;
             gap: 10px;
         }
+        .chart-legend, .legend-item { min-width: 0; overflow-wrap: anywhere; word-break: break-word; hyphens: auto; }
 
         .legend-item {
             display: flex;
@@ -807,6 +863,14 @@
             border-radius: 10px;
             padding: 15px;
             margin-top: 20px;
+        }
+
+        /* iPhone/mobile-friendly overrides */
+        @media (max-width: 480px) {
+            .analytics-grid { grid-template-columns: 1fr; gap: 16px; }
+            .chart-card { padding: 18px; }
+            .chart-title { font-size: 1.1rem; }
+            .live-stats { grid-template-columns: 1fr; }
         }
 
         .goals-section {
@@ -1660,16 +1724,10 @@
     </style>
 </head>
 <body>
+    <!-- Dekoracyjne logo po prawej stronie, pod wszystkimi sekcjami -->
+    <img src="images/logo.png" alt="Logo" aria-hidden="true"
+         style="position:fixed; top:80px; right:0; width:180px; opacity:0.13; z-index:0; pointer-events:none; user-select:none;" />
     <div class="container">
-        <!-- Nagłówek -->
-        <div class="header">
-            <h1 style="color: #00ff00; font-size: 3rem; margin-bottom: 10px; position: relative; z-index: 1;">
-                👤 Mój Profil
-            </h1>
-            <p style="color: #fff; font-size: 1.2rem; position: relative; z-index: 1;">
-                Zarządzaj swoim kontem i ustawieniami
-            </p>
-        </div>
 
         <!-- Layout główny -->
         <div class="profile-layout">
@@ -1686,13 +1744,13 @@
                     
                     <div style="text-align: center;">
                         <h3 id="user-name" style="color: #00ff00; font-size: 1.5rem; margin-bottom: 5px;">
-                            Jan Kowalski
+                            <!-- Imię użytkownika -->
                         </h3>
                         <p id="user-email" style="color: #888; margin-bottom: 15px;">
-                            test@ecvjob.pl
+                            <!-- Email użytkownika -->
                         </p>
                         <p id="user-plan" style="color: #FFD700; font-weight: bold; margin-bottom: 20px;">
-                            ⭐ Plan Bezpłatny
+                            <!-- Plan użytkownika -->
                         </p>
                         
                         <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -1719,6 +1777,72 @@
 
             <!-- Główna zawartość -->
             <div class="profile-main">
+                
+
+                <!-- Szybkie przejście do ogłoszeń -->
+                <div class="profile-card" style="margin-bottom: 24px;">
+                    <h3 class="section-title">🔎 Przeglądaj ogłoszenia</h3>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
+                        <a href="oferty-pracy.html" class="btn btn-primary" style="text-align:center;">💼 Oferty pracy</a>
+                        <a href="uslugi.html" class="btn btn-secondary" style="text-align:center;">🛠️ Usługi</a>
+                        <a href="szkolenia.html" class="btn btn-secondary" style="text-align:center;">🎓 Szkolenia</a>
+                    </div>
+                </div>
+
+                <!-- CTA: Baza CV dla firm i partnerów biznesowych -->
+                <div class="profile-card" style="margin-bottom: 24px; border: 2px solid #00ff00;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                        <h3 class="section-title" style="margin:0; display:flex; align-items:center; gap:8px;">
+                            🏢 Baza CV
+                            <span style="font-size:0.85rem; color:#111; background:#00ff00; padding:4px 10px; border-radius:999px; font-weight:700;">Dla firm i partnerów</span>
+                        </h3>
+                        <button class="btn btn-primary" onclick="(window.openCVDatabase||window.openRegistrationModal||function(){window.location.href='index.html#plany-cenowe'})()">
+                            🔎 Przeglądaj bazę CV
+                        </button>
+                    </div>
+                    <p style="margin-top:10px; color:#ccc;">
+                        Szukasz kandydatów? Przeglądaj zweryfikowane CV i nawiązuj kontakt bezpośrednio z kandydatami.
+                    </p>
+                    <small style="display:block; color:#9ae6b4;">Dostęp w planach Business i Enterprise. Użytkownicy bez uprawnień zobaczą szybki wybór planu.</small>
+                </div>
+
+                <!-- Skrzynka odbiorcza -->
+                <div class="profile-card" id="inbox-card" style="margin-bottom: 24px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                        <h3 class="section-title" style="margin:0;">📥 Skrzynka odbiorcza</h3>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span id="inbox-new-count" style="background:rgba(0,255,0,0.12); border:1px solid rgba(0,255,0,0.35); color:#00ff00; padding:6px 10px; border-radius:10px; font-size:0.9rem;">Nowe: 0</span>
+                            <button id="inbox-new-btn" class="btn btn-primary" onclick="openModal('compose-modal')">✍️ Nowa wiadomość</button>
+                        </div>
+                    </div>
+
+                    <!-- Zakładki -->
+                    <div id="inbox-tabs" style="display:flex; gap:8px; margin:12px 0; flex-wrap:wrap;">
+                        <button class="btn btn-secondary" data-type="all">Wszystkie <span id="inbox-count-all" style="opacity:0.8; margin-left:6px;">0</span></button>
+                        <button class="btn btn-secondary" data-type="message">Wiadomości <span id="inbox-count-message" style="opacity:0.8; margin-left:6px;">0</span></button>
+                        <button class="btn btn-secondary" data-type="offer">Oferty <span id="inbox-count-offer" style="opacity:0.8; margin-left:6px;">0</span></button>
+                        <button class="btn btn-secondary" data-type="notification">Powiadomienia <span id="inbox-count-notification" style="opacity:0.8; margin-left:6px;">0</span></button>
+                    </div>
+
+                    <!-- Wyszukiwarka i akcje -->
+                    <div style="display:flex; gap:10px; margin-bottom:12px; align-items:center; flex-wrap:wrap;">
+                        <input id="inbox-search" type="text" placeholder="Szukaj w wiadomościach..." class="search-input" style="flex:1; min-width:0;">
+                        <button id="inbox-search-btn" class="btn btn-secondary">🔍 Szukaj</button>
+                        <label style="display:inline-flex; align-items:center; gap:6px; color:#ccc;">
+                            <input type="checkbox" id="inbox-unread-only"> Tylko nieprzeczytane
+                        </label>
+                        <button id="inbox-mark-read" class="btn btn-secondary">Oznacz jako przeczytane</button>
+                        <button id="inbox-delete" class="btn btn-secondary">Usuń</button>
+                    </div>
+
+                    <!-- Lista wiadomości -->
+                    <div id="inbox-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+
+                    <!-- Pokaż więcej -->
+                    <div style="text-align:center; margin-top:12px;">
+                        <button id="inbox-load-more" class="btn btn-secondary">⬇️ Załaduj więcej</button>
+                    </div>
+                </div>
                 <!-- Statystyki -->
                 <div class="profile-card">
                     <h3 class="section-title">📊 Statystyki</h3>
@@ -1824,7 +1948,7 @@
                         </div>
                         
                         <!-- Prawa kolumna - Opcje upgrade -->
-                        <div style="flex: 1; min-width: 400px;">
+                        <div style="flex: 1 1 280px; min-width: 0;">
                             <h4 style="color: #00ff00; margin-bottom: 20px;">🚀 Opcje upgrade planu</h4>
                             
                             <!-- Aktualny plan -->
@@ -1842,7 +1966,7 @@
                             </div>
                             
                             <!-- Opcje upgrade -->
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px;">
                                 
                                 <!-- Starter -->
                                 <div style="background: rgba(138,43,226,0.1); border: 2px solid #8a2be2; border-radius: 12px; padding: 15px; text-align: center; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
@@ -2404,7 +2528,7 @@
             <!-- Akcje -->
             <div class="job-actions-compact">
                 <button class="btn-all-offers" onclick="window.open('oferty-pracy.html', '_blank')">
-                    � Zobacz wszystkie oferty
+                    🔎 Zobacz wszystkie oferty
                 </button>
                 <button class="btn-job-alerts" onclick="setupJobAlerts()">
                     🔔 Powiadomienia
@@ -2645,8 +2769,262 @@
         </div>
     </div>
 
+    <!-- Modal: Nowa wiadomość -->
+    <div id="compose-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="color:#00ff00;">✍️ Nowa wiadomość</h3>
+                <button class="close-modal" onclick="closeModal('compose-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Do</label>
+                    <input type="email" id="compose-to" placeholder="np. rekruter@firma.pl">
+                </div>
+                <div class="form-group">
+                    <label>Temat</label>
+                    <input type="text" id="compose-subject" placeholder="Temat wiadomości">
+                </div>
+                <div class="form-group">
+                    <label>Wiadomość</label>
+                    <textarea id="compose-body" rows="6" placeholder="Napisz wiadomość..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer" style="display:flex; gap:10px;">
+                <button class="btn btn-secondary" onclick="closeModal('compose-modal')">Anuluj</button>
+                <button class="btn btn-primary" onclick="sendMessage()">Wyślij</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Podgląd wiadomości -->
+    <div id="read-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="read-subject" style="color:#00ff00;">📨 Wiadomość</h3>
+                <button class="close-modal" onclick="closeModal('read-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="read-meta" style="color:#aaa; margin-bottom:8px;"></div>
+                <div id="read-body" style="white-space:pre-wrap; margin-bottom:12px;"></div>
+                <div id="read-offer-preview" style="display:none; background: rgba(0,0,0,0.55); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px;">
+                    <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <div>
+                            <div id="offer-title" style="color:#FFD700; font-weight:700; margin-bottom:4px;">Stanowisko</div>
+                            <div id="offer-company" style="color:#ccc; font-size:0.95rem;">Firma • Lokalizacja</div>
+                        </div>
+                        <a id="offer-link" href="oferty-pracy.html" class="btn btn-primary" target="_blank">🔎 Zobacz ofertę</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display:flex; gap:10px;">
+                <button class="btn btn-secondary" onclick="replyToCurrent()">Odpowiedz</button>
+                <button class="btn btn-primary" onclick="closeModal('read-modal')">Zamknij</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Zarządzanie zakładkami
+        // ====== SKRZYNKA ODBIORCZA ======
+        let inboxAll = [];
+        let inboxFiltered = [];
+        let inboxType = 'all';
+        let inboxQuery = '';
+        let inboxPage = 1;
+        const INBOX_PAGE_SIZE = 5;
+        let inboxCurrent = null; // aktualnie czytana wiadomość
+
+        function seedInboxIfEmpty() {
+            if (inboxAll.length) return;
+            // Wiadomości typu: message (bezpośrednie), offer (oferta), notification (powiadomienie)
+            inboxAll = [
+                { id: 1, type: 'offer', from: 'rekrutacja@techcorp.com', to: '', subject: 'Oferta: Frontend Developer (React)', body: 'Dzień dobry, zapraszamy do procesu rekrutacyjnego...', date: '2025-10-12 09:21', unread: true },
+                { id: 2, type: 'message', from: 'anna.hr@startup.io', to: '', subject: 'Twoje CV jest świetne!', body: 'Cześć, zainteresowało nas Twoje CV. Czy znajdziesz czas na rozmowę?', date: '2025-10-11 15:04', unread: true },
+                { id: 3, type: 'notification', from: 'no-reply@ecvjob.pl', to: '', subject: 'Nowe dopasowane oferty pracy', body: 'Mamy 7 nowych ofert dopasowanych do Twojego profilu.', date: '2025-10-10 08:00', unread: false },
+                { id: 4, type: 'offer', from: 'hr@bankpol.pl', to: '', subject: 'Analityk Danych – oferta współpracy', body: 'Szukamy Analityka Danych. Wynagrodzenie konkurencyjne...', date: '2025-10-09 13:45', unread: true },
+                { id: 5, type: 'message', from: 'marta.recruiter@agency.pl', to: '', subject: 'Zdalny projekt 6-miesięczny', body: 'Dzień dobry, mam propozycję kontraktu 6m...', date: '2025-10-08 10:32', unread: false },
+                { id: 6, type: 'notification', from: 'no-reply@ecvjob.pl', to: '', subject: 'Potwierdzenie zmiany hasła', body: 'Hasło zostało zmienione pomyślnie.', date: '2025-10-07 17:12', unread: false }
+            ];
+        }
+
+        function applyInboxFilters() {
+            let arr = inboxAll.slice();
+            if (inboxType !== 'all') arr = arr.filter(m => m.type === inboxType);
+            if (inboxQuery) {
+                const q = inboxQuery.toLowerCase();
+                arr = arr.filter(m => (m.subject + ' ' + m.body + ' ' + m.from).toLowerCase().includes(q));
+            }
+            const unreadOnlyEl = document.getElementById('inbox-unread-only');
+            if (unreadOnlyEl && unreadOnlyEl.checked) {
+                arr = arr.filter(m => m.unread);
+            }
+            inboxFiltered = arr;
+            inboxPage = 1;
+            updateInboxCounters();
+            renderInbox();
+        }
+
+        function updateInboxCounters() {
+            const counts = { all: inboxAll.length, message: 0, offer: 0, notification: 0 };
+            inboxAll.forEach(m => counts[m.type]++);
+            document.getElementById('inbox-count-all').textContent = counts.all;
+            document.getElementById('inbox-count-message').textContent = counts.message;
+            document.getElementById('inbox-count-offer').textContent = counts.offer;
+            document.getElementById('inbox-count-notification').textContent = counts.notification;
+            const newCount = inboxAll.filter(m => m.unread).length;
+            document.getElementById('inbox-new-count').textContent = `Nowe: ${newCount}`;
+            const emailUnread = document.getElementById('email-unread-count');
+            if (emailUnread) emailUnread.textContent = String(newCount);
+            try { localStorage.setItem('ecv_inbox', JSON.stringify(inboxAll)); } catch(_) {}
+        }
+
+        function renderInbox() {
+            const list = document.getElementById('inbox-list');
+            if (!list) return;
+            const start = 0;
+            const end = inboxPage * INBOX_PAGE_SIZE;
+            const toShow = inboxFiltered.slice(start, end);
+            if (toShow.length === 0) {
+                list.innerHTML = `<div style="text-align:center; color:#aaa; padding:20px;">Brak wiadomości</div>`;
+                return;
+            }
+            list.innerHTML = toShow.map(m => inboxItemHTML(m)).join('');
+            const btn = document.getElementById('inbox-load-more');
+            if (btn) btn.style.display = inboxFiltered.length > end ? 'inline-block' : 'none';
+        }
+
+        function inboxItemHTML(m) {
+            const badge = m.type === 'offer' ? '💼 Oferta' : m.type === 'notification' ? '🔔 Powiadomienie' : '✉️ Wiadomość';
+            const unreadDot = m.unread ? '<span style="width:8px; height:8px; background:#00ff00; border-radius:50%; display:inline-block; margin-right:8px;"></span>' : '';
+            return `
+            <div class="inbox-item" style="display:flex; gap:12px; align-items:flex-start; padding:12px; border-radius:10px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.08);">
+                <input type="checkbox" class="inbox-select" value="${m.id}" style="margin-top:4px;">
+                ${unreadDot}
+                <div style="flex:1; min-width:0; cursor:pointer;" onclick="openMessage(${m.id})">
+                    <div style="display:flex; justify-content:space-between; gap:10px;">
+                        <div style="color:#fff; font-weight:700;">${escapeHTML(m.subject)}</div>
+                        <div style="color:#aaa; white-space:nowrap;">${m.date}</div>
+                    </div>
+                    <div style="color:#aaa; margin:4px 0; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">${escapeHTML(m.body)}</div>
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                        <span style="background:rgba(0,255,0,0.12); border:1px solid rgba(0,255,0,0.35); color:#00ff00; padding:2px 8px; border-radius:10px; font-size:0.8rem;">${badge}</span>
+                        <span style="color:#888; font-size:0.85rem;">Od: ${escapeHTML(m.from)}</span>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        function openMessage(id) {
+            const m = inboxAll.find(x => x.id === id);
+            if (!m) return;
+            inboxCurrent = m;
+            m.unread = false;
+            document.getElementById('read-subject').textContent = `📨 ${m.subject}`;
+            document.getElementById('read-meta').textContent = `Od: ${m.from} • Data: ${m.date}`;
+            document.getElementById('read-body').textContent = m.body;
+            // Oferta? pokaż podgląd oferty
+            const preview = document.getElementById('read-offer-preview');
+            if (preview) {
+                if (m.type === 'offer') {
+                    preview.style.display = 'block';
+                    const titleEl = document.getElementById('offer-title');
+                    const companyEl = document.getElementById('offer-company');
+                    const linkEl = document.getElementById('offer-link');
+                    // Prosta heurystyka: wydobądź firmę z m.from i użyj ogólnego linku ofert
+                    const company = (m.company || (m.from || '').split('@')[1]?.split('.')[0]) || 'Pracodawca';
+                    const title = (m.title || m.subject).replace(/^Oferta:\s*/i, '').trim() || 'Oferta pracy';
+                    titleEl.textContent = title;
+                    companyEl.textContent = `${company} • online`;
+                    if (linkEl) {
+                        const q = encodeURIComponent(title);
+                        const c = encodeURIComponent(company);
+                        linkEl.href = `oferty-pracy.html?q=${q}&company=${c}`;
+                    }
+                } else {
+                    preview.style.display = 'none';
+                }
+            }
+            updateInboxCounters();
+            renderInbox();
+            openModal('read-modal');
+        }
+
+        function replyToCurrent() {
+            if (!inboxCurrent) return;
+            closeModal('read-modal');
+            openModal('compose-modal');
+            const toEl = document.getElementById('compose-to');
+            const subEl = document.getElementById('compose-subject');
+            if (toEl) toEl.value = inboxCurrent.from;
+            if (subEl) subEl.value = `Re: ${inboxCurrent.subject}`;
+            document.getElementById('compose-body').value = `\n\n--- Odpowiedź do: ${inboxCurrent.from} (${inboxCurrent.date}) ---\n${inboxCurrent.body}`;
+        }
+
+        function sendMessage() {
+            const to = document.getElementById('compose-to').value.trim();
+            const subject = document.getElementById('compose-subject').value.trim();
+            const body = document.getElementById('compose-body').value.trim();
+            if (!to || !subject || !body) return alert('Uzupełnij pola: Do, Temat i Wiadomość');
+            const me = document.getElementById('email-value')?.textContent?.trim() || 'me@ecvjob.pl';
+            const msg = { id: Date.now(), type: 'message', from: me, to, subject, body, date: new Date().toISOString().slice(0,16).replace('T',' '), unread: false };
+            inboxAll.unshift(msg);
+            applyInboxFilters();
+            closeModal('compose-modal');
+            alert('✅ Wiadomość wysłana (symulacja)');
+        }
+
+        function escapeHTML(str) {
+            return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inbox init
+            try {
+                const saved = JSON.parse(localStorage.getItem('ecv_inbox') || '[]');
+                if (Array.isArray(saved) && saved.length) inboxAll = saved; else seedInboxIfEmpty();
+            } catch(_) { seedInboxIfEmpty(); }
+            // Set recipient default to last opened offer/message
+            const inboxTabs = document.getElementById('inbox-tabs');
+            if (inboxTabs) {
+                inboxTabs.addEventListener('click', (e) => {
+                    const btn = e.target.closest('button[data-type]');
+                    if (!btn) return;
+                    inboxType = btn.getAttribute('data-type');
+                    applyInboxFilters();
+                });
+            }
+            const searchBtn = document.getElementById('inbox-search-btn');
+            const searchInput = document.getElementById('inbox-search');
+            searchBtn?.addEventListener('click', () => { inboxQuery = searchInput.value.trim(); applyInboxFilters(); });
+            searchInput?.addEventListener('keypress', (e) => { if (e.key==='Enter'){ inboxQuery = searchInput.value.trim(); applyInboxFilters(); }});
+            const loadMore = document.getElementById('inbox-load-more');
+            loadMore?.addEventListener('click', () => { inboxPage++; renderInbox(); });
+
+            // Unread-only filter
+            const unreadOnly = document.getElementById('inbox-unread-only');
+            unreadOnly?.addEventListener('change', () => { applyInboxFilters(); });
+
+            // Bulk mark as read
+            const markBtn = document.getElementById('inbox-mark-read');
+            markBtn?.addEventListener('click', () => {
+                const ids = Array.from(document.querySelectorAll('.inbox-select:checked')).map(el => Number(el.value));
+                if (!ids.length) return alert('Zaznacz wiadomości do oznaczenia');
+                inboxAll.forEach(m => { if (ids.includes(m.id)) m.unread = false; });
+                applyInboxFilters();
+            });
+
+            // Bulk delete
+            const delBtn = document.getElementById('inbox-delete');
+            delBtn?.addEventListener('click', () => {
+                const ids = Array.from(document.querySelectorAll('.inbox-select:checked')).map(el => Number(el.value));
+                if (!ids.length) return alert('Zaznacz wiadomości do usunięcia');
+                if (!confirm(`Usunąć ${ids.length} wiadomości?`)) return;
+                inboxAll = inboxAll.filter(m => !ids.includes(m.id));
+                applyInboxFilters();
+            });
+            applyInboxFilters();
+        });
         function switchTab(tabName) {
             // Ukryj wszystkie zakładki
             document.querySelectorAll('.tab-content').forEach(tab => {
@@ -2740,6 +3118,12 @@
             setTimeout(() => {
                 document.getElementById('user-name').textContent = name;
                 document.getElementById('user-email').textContent = email;
+
+                // Uaktualnij badge i link mailto
+                const emailValueEl = document.getElementById('email-value');
+                const emailMailtoEl = document.getElementById('email-mailto');
+                if (emailValueEl) emailValueEl.textContent = email;
+                if (emailMailtoEl) emailMailtoEl.href = `mailto:${email}`;
                 
                 // Zaktualizuj dane w sessionStorage
                 const userData = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
@@ -2751,6 +3135,39 @@
                 alert('✅ Profil został zaktualizowany!');
             }, 1000);
         }
+
+        // Inicjalizacja email badge po załadowaniu dokumentu
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const stored = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+                const fallback = document.getElementById('user-email')?.textContent?.trim() || '';
+                const email = stored.email || fallback;
+                if (email) {
+                    const emailValueEl = document.getElementById('email-value');
+                    const emailMailtoEl = document.getElementById('email-mailto');
+                    if (emailValueEl) emailValueEl.textContent = email;
+                    if (emailMailtoEl) emailMailtoEl.href = `mailto:${email}`;
+                }
+            } catch(_) {}
+
+            const copyBtn = document.getElementById('email-copy');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', async () => {
+                    const val = document.getElementById('email-value')?.textContent?.trim();
+                    if (!val) return alert('Brak adresu e‑mail do skopiowania');
+                    try {
+                        await navigator.clipboard.writeText(val);
+                        alert('📋 Skopiowano adres do schowka');
+                    } catch(e) {
+                        const ta = document.createElement('textarea');
+                        ta.value = val; document.body.appendChild(ta); ta.select();
+                        try { document.execCommand('copy'); alert('📋 Skopiowano adres do schowka'); }
+                        catch(_) { alert('Nie udało się skopiować adresu'); }
+                        finally { document.body.removeChild(ta); }
+                    }
+                });
+            }
+        });
 
         // Toggle ustawień
         function toggleSetting(element) {
@@ -3016,24 +3433,22 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 DOM załadowany, inicjalizacja profilu...');
             
-            // Sprawdź czy użytkownik jest zalogowany
+
+
+            // Debug: sprawdź obecność danych w storage
             const userData = sessionStorage.getItem('currentUser');
             const isLoggedIn = localStorage.getItem('isLoggedIn');
-            
-            // Automatyczne logowanie dla profilu bez powiadomień
-            if (!userData || !isLoggedIn) {
-                console.log('⚠️ Brak danych użytkownika, automatyczne logowanie...');
-                const tempUser = {
-                    name: 'Użytkownik eCVjob',
-                    email: 'uzytkownik@ecvjob.pl', 
-                    plan: 'Plan Premium'
-                };
-                sessionStorage.setItem('currentUser', JSON.stringify(tempUser));
-                localStorage.setItem('isLoggedIn', 'true');
+            console.log('[DEBUG] sessionStorage.currentUser:', userData);
+            console.log('[DEBUG] localStorage.isLoggedIn:', isLoggedIn);
+            if (!userData || isLoggedIn !== 'true') {
+                console.warn('[DEBUG] Brak danych użytkownika lub nie jest zalogowany. Przekierowanie na index.html');
+                window.location.href = 'index.html';
+                return;
             }
-            
+
             // Załaduj dane użytkownika
-            const user = JSON.parse(sessionStorage.getItem('currentUser'));
+            const user = JSON.parse(userData);
+            console.log('[DEBUG] Załadowano dane użytkownika:', user);
             document.getElementById('user-name').textContent = user.name || 'Użytkownik';
             document.getElementById('user-email').textContent = user.email || 'brak@email.com';
             document.getElementById('user-plan').textContent = '⭐ ' + (user.plan || 'Plan Bezpłatny');
@@ -3869,6 +4284,14 @@
             }
 
             console.log('🎯 Centrum Zarabiania zostało zainicjalizowane');
+            // Załaduj dane użytkownika z sessionStorage
+            const userData = sessionStorage.getItem('currentUser');
+            if (userData) {
+                const user = JSON.parse(userData);
+                document.getElementById('user-name').textContent = user.name || 'Użytkownik';
+                document.getElementById('user-email').textContent = user.email || 'brak@email.com';
+                document.getElementById('user-plan').textContent = '⭐ ' + (user.plan || 'Plan Bezpłatny');
+            }
         });
     </script>
 </body>

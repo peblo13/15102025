@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Rejestracja - eCVjob.pl</title>
     <meta name="description" content="Załóż konto w eCVjob.pl - wybierz plan i rejestruj się błyskawicznie!">
     <meta name="keywords" content="rejestracja, konto, eCVjob, plany cenowe, social media">
@@ -18,53 +18,24 @@
             display: flex;
             flex-direction: column;
         }
-        .main-nav {
-            width: 100vw;
-            background: rgba(0,0,0,0.85);
-            box-shadow: 0 2px 18px #00ff0033;
-            position: relative;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            margin-bottom: 0;
-        }
-        .nav-logo {
-            color: #00ff00;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-right: 18px;
-            letter-spacing: 1px;
-            text-shadow: 0 0 8px #00ff00;
-        }
-        .nav-list {
-            list-style: none;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: 0.5rem 1.2rem;
-            margin: 0;
-            padding: 0;
-        }
-        .nav-list li a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 10px 14px;
-            border-radius: 8px;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-        .nav-list li a:hover, .nav-list li a.active {
-            background: #00ff00;
-            color: #111;
-        }
+        /* Fixed, fitted background on small screens */
         @media (max-width: 768px) {
-            .main-nav { flex-direction: column; padding: 10px; }
-            .nav-logo { margin: 0 0 10px 0; }
-            .nav-list { justify-content: center; }
+            body { background: transparent !important; }
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: url('images/tlo.jpg') no-repeat center center;
+                background-size: cover;
+                z-index: -1;
+                pointer-events: none;
+                transform: translateZ(0);
+            }
         }
+        /* Global back button */
+        .back-btn { position: fixed; top: calc(14px + env(safe-area-inset-top)); left: 14px; z-index: 9999; background: rgba(0,0,0,0.8); color:#00ff00; border:2px solid #00ff00; border-radius: 12px; padding: 10px 14px; font-weight: 800; letter-spacing: .5px; box-shadow: 0 6px 24px rgba(0,255,0,.25); cursor: pointer; }
+        .back-btn:active { transform: scale(.98) }
+        @media (max-width: 768px) { .back-btn { font-size: 14px } }
         .register-container {
             background: rgba(0,0,0,0.85);
             border: 2px solid #00ff00;
@@ -195,16 +166,11 @@
     </style>
 </head>
 <body>
-    <nav class="main-nav">
-        <div class="nav-logo">eCVjob.pl</div>
-        <ul class="nav-list">
-            <li><a href="index.html">Strona główna</a></li>
-            <li><a href="baza_cv.html">Baza CV</a></li>
-            <li><a href="marketplace.html">💰 Marketplace</a></li>
-            <li><a href="logowanie.html">Logowanie</a></li>
-            <li><a href="rejestracja_new.html" class="active">Rejestracja</a></li>
-        </ul>
-    </nav>
+    <!-- Dekoracyjne logo po prawej stronie, pod wszystkimi sekcjami -->
+    <img src="images/logo.png" alt="Logo" aria-hidden="true"
+         style="position:fixed; top:80px; right:0; width:180px; opacity:0.13; z-index:0; pointer-events:none; user-select:none;" />
+    <!-- Przycisk Wstecz (zawsze widoczny) -->
+    <button id="backBtn" class="back-btn" type="button">← Wstecz</button>
     <div class="register-container">
         <h1 style="color: #00ff00; text-align: center; margin-bottom: 30px; font-size: 2.5rem; text-shadow: 0 0 10px #00ff00;">🚀 Rejestracja</h1>
         <form id="registration-form" class="register-form">
@@ -258,6 +224,16 @@
         </div>
     </div>
     <script>
+        // Obsługa przycisku Wstecz (z fallbackiem)
+        document.addEventListener('DOMContentLoaded', function(){
+            var btn = document.getElementById('backBtn');
+            if (btn) {
+                btn.addEventListener('click', function(){
+                    if (history.length > 1) { history.back(); }
+                    else { location.href = 'index.html'; }
+                });
+            }
+        });
         document.getElementById('registration-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -290,4 +266,29 @@
             alert(`🎉 Rejestracja pomyślna!\n\nWitaj ${fullname}!\nPlan: ${plan}\n\nMożesz teraz zacząć tworzyć CV i zarabiać na swoich szablonach!`);
             window.location.href = 'index.html?registered=success&plan=' + plan;
         });
-    </script>
+        </script>
+        <!-- iOS standalone back button -->
+        <style>
+            .pwa-back-btn { position: fixed; top: 14px; left: 14px; z-index: 9999; background: rgba(0,0,0,0.8); color:#00ff00; border:2px solid #00ff00; border-radius: 12px; padding: 10px 14px; font-weight: 800; letter-spacing: .5px; box-shadow: 0 6px 24px rgba(0,255,0,.25); display:none }
+            .pwa-back-btn:active { transform: scale(.98) }
+            @media (max-width: 768px) { .pwa-back-btn { font-size: 14px } }
+        </style>
+        <script>
+            (function(){
+                var isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone;
+                if (!isStandalone) return;
+                var path = (location.pathname||'').toLowerCase();
+                if (path.endsWith('/index.html') || path === '/' || path === '') return;
+                var btn = document.createElement('button');
+                btn.className = 'pwa-back-btn';
+                btn.textContent = '← Wstecz';
+                btn.addEventListener('click', function(){
+                    if (history.length > 1) { history.back(); }
+                    else { location.href = 'index.html'; }
+                });
+                document.body.appendChild(btn);
+                btn.style.display = 'inline-block';
+            })();
+        </script>
+    </body>
+    </html>

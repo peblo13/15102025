@@ -2,17 +2,72 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Marketplace Szablonów CV - eCVjob.pl</title>
     <link rel="stylesheet" href="css/optimized-styles.css">
+    <link rel="preload" href="images/tlo.jpg" as="image">
     <style>
+        html, body { height: 100%; }
         body {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            /* Transparent base, real background provided by pinned layers below */
+            background: transparent;
             color: #fff;
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
+            position: relative;
         }
+
+        /* iOS-safe pinned background image (sharp on Retina) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            background-color: #0a0a0a; /* fallback color */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            /* Prefer high-res if available; browsers gracefully fall back */
+            /* Używamy jednego pliku dla 1x i 2x, aby uniknąć 404, dopóki nie dostarczymy tlo@2x.jpg */
+            background-image: image-set(
+                url('images/tlo.jpg') 1x,
+                url('images/tlo.jpg') 2x
+            );
+            /* Ensure smoothness on iOS when scrolling */
+            will-change: transform; 
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            pointer-events: none;
+        }
+
+        /* Subtle gradient veil to keep foreground legible on busy photos */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, rgba(10,10,10,0.70) 0%, rgba(26,26,46,0.70) 50%, rgba(22,33,62,0.70) 100%);
+            pointer-events: none;
+        }
+        /* Global back button */
+        .back-btn {
+            position: fixed;
+            top: calc(14px + env(safe-area-inset-top));
+            left: 14px;
+            z-index: 9999;
+            background: rgba(0,0,0,0.8);
+            color:#00ff00;
+            border:2px solid #00ff00;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            box-shadow: 0 6px 24px rgba(0,255,0,.25);
+            cursor: pointer;
+        }
+        .back-btn:active { transform: scale(.98) }
+        @media (max-width: 768px) { .back-btn { font-size: 14px } }
         
         .marketplace-hero {
             background: linear-gradient(135deg, #00ff00 0%, #33ff33 100%);
@@ -231,9 +286,40 @@
             font-size: 0.8rem;
             font-weight: bold;
         }
+
+        /* Mobile/iPhone hardening: avoid horizontal overflow and ensure wrapping */
+        @media (max-width: 480px) {
+            .marketplace-hero { padding: 64px 16px; margin-bottom: 32px; }
+            .marketplace-hero h1 { font-size: 2rem; line-height: 1.2; word-break: break-word; }
+
+            .templates-grid {
+                grid-template-columns: 1fr;
+                padding: 12px;
+                gap: 20px;
+            }
+            .templates-grid > * { min-width: 0; }
+
+            .template-card { min-width: 0; }
+            .template-info h3 {
+                overflow-wrap: anywhere;
+                word-break: break-word;
+                hyphens: auto;
+            }
+            .template-actions { flex-wrap: wrap; }
+            .btn-buy, .btn-preview { flex: 1 1 100%; }
+
+            .marketplace-stats { gap: 16px; margin: 24px 0; }
+            .stat-item { min-width: 120px; padding: 14px; }
+            .stat-number { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
+    <!-- Dekoracyjne logo po prawej stronie, pod wszystkimi sekcjami -->
+    <img src="images/logo.png" alt="Logo" aria-hidden="true"
+         style="position:fixed; top:80px; right:0; width:180px; opacity:0.13; z-index:0; pointer-events:none; user-select:none;" />
+    <!-- Przycisk Wstecz (zawsze widoczny) -->
+    <button id="backBtn" class="back-btn" type="button">← Wstecz</button>
     <div class="marketplace-hero">
         <h1>💰 Marketplace Szablonów CV</h1>
         <p style="font-size: 1.3rem; margin-bottom: 30px;">Kupuj i sprzedawaj profesjonalne szablony CV</p>
@@ -399,6 +485,16 @@
     </div>
 
     <script>
+        // Obsługa przycisku Wstecz (z fallbackiem do strony głównej)
+        document.addEventListener('DOMContentLoaded', function(){
+            var btn = document.getElementById('backBtn');
+            if (btn) {
+                btn.addEventListener('click', function(){
+                    if (history.length > 1) { history.back(); }
+                    else { location.href = 'index.html'; }
+                });
+            }
+        });
         // Dodaj animacje i interakcje
         document.addEventListener('DOMContentLoaded', function() {
             // Animacja liczników w hero

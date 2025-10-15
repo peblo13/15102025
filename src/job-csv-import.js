@@ -46,7 +46,7 @@ function importCSV() {
         complete: function(results) {
             const offers = results.data.map(row => {
                 const cleaned = {};
-                Object.keys(row).forEach(key => {
+                Object.keys(row).forEach(function(key) {
                     const cleanKey = key.replace(/^[\s"']+|[\s"']+$/g, '');
                     let value = row[key];
                     if (typeof value === 'string') {
