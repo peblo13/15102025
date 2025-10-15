@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>O nas | eCVjob.pl</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/cv3.css">
+    <link rel="stylesheet" href="css/logo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    <style>
+        /* Tło jak na stronie głównej: desktop */
+        body {
+            background: #f7f7f7 url('images/tlo.jpg') no-repeat center top fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Mobile: nieruchome, dopasowane tło w pseudoelemencie (ostre na iOS) */
+        @media (max-width: 768px) {
+            body { background: none !important; position: relative; }
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                z-index: -1;
+                background: #f7f7f7 url('images/tlo.jpg') no-repeat center top;
+                background-size: cover;
+                transform: translateZ(0);
+                will-change: transform;
+            }
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: none; /* usunięta globalna nakładka */
+            border-radius: 0;
+        }
+        h1, h2 {
+            color: #00ff00;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px #00ff00;
+        }
+        .about-box {
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #00ff00;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(0,255,0,0.2);
+            padding: 40px 30px;
+            margin-bottom: 40px;
+        }
+        .about-team {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .team-member {
+            background: rgba(0,255,0,0.08);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid #00ff00;
+        }
+        .team-member img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 2px solid #00ff00;
+            object-fit: cover;
+        }
+        .team-member h3 {
+            color: #00ff00;
+            margin-bottom: 8px;
+        }
+        .team-member p {
+            color: #fff;
+            font-size: 1rem;
+        }
+        footer {
+            text-align: center;
+            padding: 30px 0 10px 0;
+            color: #00ff00;
+            font-size: 1rem;
+            background: rgba(0,0,0,0.8);
+            margin-top: 60px;
+        }
+
+        /* Znak wodny z logiem (jak na innych podstronach) */
+        .watermark-logo {
+            position: fixed;
+            right: max(10px, env(safe-area-inset-right));
+            top: max(10px, env(safe-area-inset-top));
+            z-index: 1; /* ponad tłem, pod sekcjami */
+            opacity: 0.08;
+            pointer-events: none;
+            user-select: none;
+        }
+        .watermark-logo img {
+            width: clamp(120px, 20vw, 240px);
+            height: auto;
+            filter: drop-shadow(0 0 12px rgba(0,255,0,0.25));
+        }
+        @media (max-width: 768px) {
+            .watermark-logo img { width: clamp(100px, 28vw, 180px); }
+        }
+    </style>
+</head>
+<body>
+    <header style="background: transparent; box-shadow: none;">
+        <div class="container" style="background: none; box-shadow: none;">
+            <h1>O nas</h1>
+            <p style="color:#fff; text-align:center; font-size:1.2rem; margin-bottom:30px;">Poznaj zespół i misję eCVjob.pl</p>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="about-box">
+                <h2>Kim jesteśmy?</h2>
+                <p>eCVjob.pl to nowoczesna platforma łącząca kandydatów z pracodawcami. Naszą misją jest uproszczenie procesu rekrutacji, zapewnienie wygodnego kreatora CV oraz dostęp do aktualnych ofert pracy i bazy kandydatów.</p>
+                <ul style="color:#00fff7; font-size:1.1rem; margin-top:20px;">
+                    <li>Innowacyjne narzędzia rekrutacyjne</li>
+                    <li>Automatyczne dopasowanie ofert do kandydatów</li>
+                    <li>Bezpieczne przechowywanie danych</li>
+                    <li>Wsparcie ekspertów HR</li>
+                </ul>
+            </div>
+            <div class="about-box">
+                <h2>Nasza misja</h2>
+                <p>Stawiamy na innowacje, bezpieczeństwo danych i intuicyjność. Chcemy, aby każdy użytkownik mógł szybko znaleźć wymarzoną pracę lub idealnego pracownika.</p>
+                <blockquote style="color:#00ff00; border-left:4px solid #00ff00; padding-left:16px; margin:20px 0; font-size:1.15rem; background:rgba(0,255,0,0.07);">„Łączymy ludzi z możliwościami, budujemy lepszy rynek pracy.”</blockquote>
+            </div>
+            <div class="about-box">
+                <h2>Nasze wartości</h2>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+                    <div style="background:rgba(0,255,0,0.08);border-radius:12px;padding:18px;text-align:center;border:2px solid #00ff00;">
+                        <h3 style="color:#00ff00;">Zaufanie</h3>
+                        <p>Dbamy o bezpieczeństwo i prywatność danych użytkowników.</p>
+                    </div>
+                    <div style="background:rgba(0,255,0,0.08);border-radius:12px;padding:18px;text-align:center;border:2px solid #00ff00;">
+                        <h3 style="color:#00ff00;">Innowacja</h3>
+                        <p>Wdrażamy najnowsze technologie, by ułatwić rekrutację.</p>
+                    </div>
+                    <div style="background:rgba(0,255,0,0.08);border-radius:12px;padding:18px;text-align:center;border:2px solid #00ff00;">
+                        <h3 style="color:#00ff00;">Wsparcie</h3>
+                        <p>Pomagamy kandydatom i pracodawcom na każdym etapie procesu.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="about-box">
+                <h2>Nasz zespół</h2>
+                <div class="about-team">
+                    <div class="team-member">
+                        <img src="images/pawela1.jpg" alt="Paweł Śliwiński" onerror="this.onerror=null; this.src='img/team1.jpg';">
+                        <h3>Paweł Śliwiński</h3>
+                        <p>Założyciel & CEO</p>
+                        <p style="font-size:0.95rem; color:#00fff7;">Twórca wizji, strategii i główny architekt platformy eCVjob.pl.</p>
+                    </div>
+                    <!--
+                    <div class="team-member">
+                        <img src="img/team-lawyer.jpg" alt="Imię Nazwisko">
+                        <h3>Imię Nazwisko</h3>
+                        <p>Prawnik</p>
+                        <p style="font-size:0.95rem; color:#00fff7;">Opis roli prawnika w zespole.</p>
+                    </div>
+                    -->
+                </div>
+            </div>
+            <div class="about-box">
+                <h2>Dlaczego warto nam zaufać?</h2>
+                <ul style="color:#00fff7; font-size:1.1rem; margin-top:20px;">
+                    <li>Ponad 15 000 utworzonych CV</li>
+                    <li>Setki zadowolonych pracodawców i kandydatów</li>
+                    <li>Intuicyjny kreator CV i szybka aplikacja do ofert</li>
+                    <li>Wsparcie na każdym etapie rekrutacji</li>
+                </ul>
+            </div>
+            <div class="about-box">
+                <h2>Kontakt</h2>
+                <p>Masz pytania? Skontaktuj się z nami:</p>
+                <ul style="color:#00fff7; font-size:1.1rem;">
+                    <li>Email: kontakt@ecvjob.pl</li>
+                    <li>Telefon: +48 123 456 789</li>
+                    <li>Adres: ul. Przykładowa 1, 00-001 Warszawa</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer>
+        &copy; 2025 eCVjob.pl. Wszelkie prawa zastrzeżone.
+    </footer>
+
+    <!-- Znak wodny z logiem -->
+    <div class="watermark-logo" aria-hidden="true">
+        <img src="images/logo.png" alt="eCVjob.pl">
+    </div>
+
+    <!-- PWA: Przycisk "Wstecz" widoczny tylko w trybie standalone (iOS z ekranu głównego) -->
+    <style>
+        .pwa-back-btn {
+            position: fixed;
+            top: max(10px, env(safe-area-inset-top));
+            left: max(10px, env(safe-area-inset-left));
+            z-index: 9999;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.2);
+            backdrop-filter: blur(4px);
+            display: none;
+        }
+        .pwa-back-btn--show { display: block; }
+    </style>
+    <script>
+    (function () {
+        function isStandalone() {
+            var mq = false;
+            try { mq = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches; } catch (e) {}
+            var ns = false;
+            try { ns = !!window.navigator.standalone; } catch (e) {}
+            return mq || ns;
+        }
+        if (!isStandalone()) return;
+
+        var existing = document.querySelector('.pwa-back-btn');
+        if (existing) { existing.className = 'pwa-back-btn pwa-back-btn--show'; return; }
+
+        var btn = document.createElement('button');
+        btn.className = 'pwa-back-btn pwa-back-btn--show';
+        btn.setAttribute('aria-label', 'Wstecz');
+        btn.textContent = '← Wstecz';
+        btn.addEventListener('click', function () {
+            try {
+                if (window.history && window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.location.href = 'index.html';
+                }
+            } catch (e) {
+                window.location.href = 'index.html';
+            }
+        });
+        document.body.appendChild(btn);
+
+        // Usuń ewentualne duplikaty
+        window.addEventListener('DOMContentLoaded', function () {
+            var all = document.querySelectorAll('.pwa-back-btn');
+            for (var i = 1; i < all.length; i++) {
+                if (all[i].parentNode) all[i].parentNode.removeChild(all[i]);
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nowoczesny Kreator CV - eCVjob.pl</title>
+    <style>
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f0 0%, #222 100%), url('/moj_projek/eCVjob.pl/images/tlo.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .form-container {
+            background: rgba(0, 32, 0, 0.32);
+            padding: 38px 28px;
+            border-radius: 18px;
+            box-shadow: 0 4px 32px 0 rgba(0,255,0,0.13), 0 2px 16px 0 rgba(0,0,0,0.18);
+            border: 2.5px solid #00ff00;
+            max-width: 900px;
+            width: 96%;
+            margin: 40px auto;
+            color: #fff;
+        }
+        .form-title {
+            color: #00ff00;
+            font-size: 2.3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 32px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 18px #00ff00, 0 0 32px #00ff00cc;
+        }
+        .form-section {
+            margin-bottom: 32px;
+            background: rgba(0, 32, 0, 0.18);
+            padding: 22px 18px 18px 18px;
+            border-radius: 12px;
+            border-left: 4px solid #00ff00;
+            box-shadow: 0 2px 12px 0 rgba(0,255,0,0.07);
+        }
+        .form-section-title {
+            color: #00ff00;
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            color: #00ff00;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 6px;
+            padding-left: 2px;
+        }
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #00ff00;
+            border-radius: 7px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            font-size: 1.08rem;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #fff;
+            box-shadow: 0 0 12px #00ff00cc;
+        }
+        .form-textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+        .add-btn, .remove-btn {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 7px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px 0;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .add-btn:hover {
+            background: #fff;
+            color: #00ff00;
+        }
+        .remove-btn {
+            background: #ff4444;
+            color: #fff;
+        }
+        .remove-btn:hover {
+            background: #ff6666;
+        }
+        .generate-btn {
+            background: linear-gradient(45deg, #00ff00, #00fff7);
+            color: #111;
+            border: none;
+            padding: 20px 44px;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            margin: 36px auto 0 auto;
+            box-shadow: 0 0 24px #00ff00cc;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+        }
+        .generate-btn:hover {
+            background: linear-gradient(45deg, #00fff7, #00ff00);
+            color: #000;
+            box-shadow: 0 0 32px #00fff7cc;
+        }
+        @media (max-width: 900px) {
+            .form-row, .form-row-3 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="form-title">Nowoczesny kreator CV</h1>
+        <form id="cvForm">
+            <div class="form-section">
+                <h2 class="form-section-title">Dane osobowe</h2>
+                <div class="form-group">
+                    <label class="form-label">Imię i nazwisko *</label>
+                    <input type="text" class="form-input" id="fullName" required placeholder="np. Jan Kowalski">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Stanowisko/Specjalizacja *</label>
+                    <input type="text" class="form-input" id="jobTitle" required placeholder="np. Full-Stack Developer">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Email *</label>
+                        <input type="email" class="form-input" id="email" required placeholder="jan.kowalski@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Telefon *</label>
+                        <input type="tel" class="form-input" id="phone" required placeholder="+48 600 123 456">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Miasto *</label>
+                        <input type="text" class="form-input" id="city" required placeholder="Warszawa">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Portfolio/LinkedIn (opcjonalne)</label>
+                        <input type="url" class="form-input" id="portfolio" placeholder="https://linkedin.com/in/jan-kowalski">
+                    </div>
+                </div>
+            </div>
+            <div class="form-section">
+                <h2 class="form-section-title">Profil zawodowy</h2>
+                <div class="form-group">
+                    <label class="form-label">Opis profilu zawodowego *</label>
+                    <textarea class="form-textarea" id="profile" required placeholder="Opisz swoje doświadczenie, umiejętności i cele zawodowe w 2-3 zdaniach..."></textarea>
+                </div>
+            </div>
+            <div class="form-section">
+                <h2 class="form-section-title">Doświadczenie zawodowe</h2>
+                <div id="experienceContainer"></div>
+                <button type="button" class="add-btn" onclick="addExperience()">➕ Dodaj doświadczenie</button>
+            </div>
+            <div class="form-section">
+                <h2 class="form-section-title">Wykształcenie</h2>
+                <div id="educationContainer"></div>
+                <button type="button" class="add-btn" onclick="addEducation()">➕ Dodaj wykształcenie</button>
+            </div>
+            <div class="form-section">
+                <h2 class="form-section-title">Umiejętności techniczne</h2>
+                <div id="skillsContainer"></div>
+                <button type="button" class="add-btn" onclick="addSkill()">➕ Dodaj umiejętność</button>
+            </div>
+            <div class="form-section">
+                <h2 class="form-section-title">Języki obce</h2>
+                <div id="languagesContainer"></div>
+                <button type="button" class="add-btn" onclick="addLanguage()">➕ Dodaj język</button>
+            </div>
+            <button type="submit" class="generate-btn">🚀 Wygeneruj CV</button>
+        </form>
+    </div>
+    <script>
+    // Dynamiczne sekcje formularza
+    function addExperience() {
+        const container = document.getElementById('experienceContainer');
+        const div = document.createElement('div');
+        div.className = 'form-section experience-item';
+        div.innerHTML = `
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Stanowisko</label>
+                    <input type="text" class="form-input experience-position" placeholder="np. Senior Developer">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nazwa firmy</label>
+                    <input type="text" class="form-input experience-company" placeholder="np. ABC Tech Sp. z o.o.">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Data rozpoczęcia</label>
+                    <input type="text" class="form-input experience-start" placeholder="MM/RRRR">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Data zakończenia</label>
+                    <input type="text" class="form-input experience-end" placeholder="MM/RRRR lub 'obecnie'">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Opis obowiązków</label>
+                <textarea class="form-textarea experience-description" placeholder="• Opisz swoje główne obowiązki\n• Wymień konkretne projekty i technologie\n• Podaj mierzalne rezultaty"></textarea>
+            </div>
+            <button type="button" class="remove-btn" onclick="this.parentElement.remove()">🗑️ Usuń</button>
+        `;
+        container.appendChild(div);
+    }
+    function addEducation() {
+        const container = document.getElementById('educationContainer');
+        const div = document.createElement('div');
+        div.className = 'form-section education-item';
+        div.innerHTML = `
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Kierunek/Specjalizacja</label>
+                    <input type="text" class="form-input education-degree" placeholder="np. Informatyka">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Uczelnia/Szkoła</label>
+                    <input type="text" class="form-input education-school" placeholder="np. Uniwersytet Warszawski">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Lata nauki</label>
+                    <input type="text" class="form-input education-years" placeholder="2018-2021">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Dodatkowe informacje</label>
+                    <input type="text" class="form-input education-additional" placeholder="np. średnia 4.5, licencjat">
+                </div>
+            </div>
+            <button type="button" class="remove-btn" onclick="this.parentElement.remove()">🗑️ Usuń</button>
+        `;
+        container.appendChild(div);
+    }
+    function addSkill() {
+        const container = document.getElementById('skillsContainer');
+        const div = document.createElement('div');
+        div.className = 'form-row skill-group';
+        div.innerHTML = `
+            <input type="text" class="form-input skill-input skill-name" placeholder="np. JavaScript">
+            <div class="rating-group">
+                <span class="star-rating" data-rating="1">★</span>
+                <span class="star-rating" data-rating="2">★</span>
+                <span class="star-rating" data-rating="3">★</span>
+                <span class="star-rating" data-rating="4">★</span>
+                <span class="star-rating" data-rating="5">★</span>
+            </div>
+            <button type="button" class="remove-btn" onclick="this.parentElement.remove()">🗑️</button>
+        `;
+        container.appendChild(div);
+        addStarRatingListeners(div.querySelectorAll('.star-rating'));
+    }
+    function addLanguage() {
+        const container = document.getElementById('languagesContainer');
+        const div = document.createElement('div');
+        div.className = 'form-row-3 language-group';
+        div.innerHTML = `
+            <div class="form-group">
+                <label class="form-label">Język</label>
+                <input type="text" class="form-input language-name" placeholder="np. Angielski">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Poziom</label>
+                <select class="form-select language-level">
+                    <option value="">Wybierz poziom</option>
+                    <option value="A1">A1 - Podstawowy</option>
+                    <option value="A2">A2 - Podstawowy</option>
+                    <option value="B1">B1 - Średnio-zaawansowany</option>
+                    <option value="B2">B2 - Średnio-zaawansowany</option>
+                    <option value="C1">C1 - Zaawansowany</option>
+                    <option value="C2">C2 - Biegły</option>
+                    <option value="Native">Ojczysty</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Ocena (1-5 gwiazdek)</label>
+                <div class="rating-group language-rating">
+                    <span class="star-rating" data-rating="1">★</span>
+                    <span class="star-rating" data-rating="2">★</span>
+                    <span class="star-rating" data-rating="3">★</span>
+                    <span class="star-rating" data-rating="4">★</span>
+                    <span class="star-rating" data-rating="5">★</span>
+                </div>
+            </div>
+            <button type="button" class="remove-btn" onclick="this.parentElement.remove()">🗑️ Usuń język</button>
+        `;
+        container.appendChild(div);
+        addStarRatingListeners(div.querySelectorAll('.star-rating'));
+    }
+    function addStarRatingListeners(stars) {
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                stars.forEach((s, i) => {
+                    if (i < rating) s.classList.add('filled');
+                    else s.classList.remove('filled');
+                });
+            });
+        });
+    }
+    // Dodaj domyślne sekcje na start
+    document.addEventListener('DOMContentLoaded', function() {
+        addExperience();
+        addEducation();
+        addSkill();
+        addLanguage();
+    });
+    // Obsługa submit (możesz podpiąć generowanie CV lub podgląd)
+    document.getElementById('cvForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Wygenerowano CV! (tu można podpiąć podgląd lub eksport)');
+    });
+    </script>
+</body>
+</html>
